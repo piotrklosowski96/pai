@@ -1,14 +1,13 @@
-import { Carousel } from "../carousel/Carousel.tsx";
+import { Carousel } from "../../components/carousel/Carousel.tsx";
 import { useState } from "react";
 
 const slides = [
-	"list_do_m5.jpg",
 	"puss_in_boots.jpg",
 	"night.jpg",
 	"avatar.jpg",
 ]
 
-export default function MainPage() {
+export default function Main() {
 	const [curr, setCurr] = useState(0)
 
 	const previousSlide = () => setCurr((curr) => (curr === 0 ? slides.length - 1 : curr - 1))
@@ -16,7 +15,7 @@ export default function MainPage() {
 
 	return (
 		<>
-			<div className="bg-gray-100">
+			<div className="grid bg-gray-100">
 				{
 					slides.map((slideSrc, i) => (
 						<div hidden={i !== curr}>
@@ -31,9 +30,6 @@ export default function MainPage() {
 								<button onClick={nextSlide}
 												className='p-3 rounded-full shadow bg-white/80 text-gray-800 hover:bg-white'>
 								</button>
-							</div>
-							<div className="absolute inset-0 flex items-center justify-between p-12">
-								fdsafasd
 							</div>
 						</div>
 					))

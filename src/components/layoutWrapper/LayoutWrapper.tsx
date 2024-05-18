@@ -9,7 +9,7 @@ export function LayoutWrapper() {
 	return (
 		<>
 			<div className="flex flex-col min-h-screen ">
-{/*				<Disclosure as="nav" className="bg-gray-700">
+				<Disclosure as="nav" className="bg-gray-700">
 					<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 						<div className="flex h-16 items-center justify-between">
 							<div className="flex items-center">
@@ -52,7 +52,7 @@ export function LayoutWrapper() {
 							</div>
 						</div>
 					</div>
-				</Disclosure>*/}
+				</Disclosure>
 				<main>
 					<Outlet />
 				</main>
