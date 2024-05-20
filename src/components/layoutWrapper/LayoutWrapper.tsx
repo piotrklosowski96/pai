@@ -6,6 +6,33 @@ function classNames(...classes: string[]) {
 }
 
 export function LayoutWrapper() {
+	const paths = [
+		{
+			name: "Administracja",
+			to: "/administracja",
+		},
+		{
+			name: "Repertuar",
+			to: "/repertuar"
+		},
+		{
+			name: "Wydarzenia",
+			to: "/wydarzenia"
+		},
+		{
+			name: "Kontakt",
+			to: "/kontakt"
+		},
+		{
+			name: "Logowanie",
+			to: "/logowanie"
+		},
+		{
+			name: "Rejestracja",
+			to: "/rejestracja"
+		}
+	]
+
 	return (
 		<>
 			<div className="flex flex-col min-h-screen ">
@@ -23,38 +50,22 @@ export function LayoutWrapper() {
 							</div>
 							<div className="md:block">
 								<div className="ml-4 flex items-center md:ml-6 space-x-4">
-									<Link
-										className={classNames('bg-gray-900 text-white', 'rounded-md px-3 py-2 text-sm font-medium')}
-										to="/repertuar">
-										Repertuar
-									</Link>
-									<Link
-										className={classNames('bg-gray-900 text-white', 'rounded-md px-3 py-2 text-sm font-medium')}
-										to="/wydarzenia">
-										Wydarzenia
-									</Link>
-									<Link
-										className={classNames('bg-gray-900 text-white', 'rounded-md px-3 py-2 text-sm font-medium')}
-										to="/kontakt">
-										Kontakt
-									</Link>
-									<Link
-										className={classNames('bg-gray-900 text-white', 'rounded-md px-3 py-2 text-sm font-medium')}
-										to="/logowanie">
-										Logowanie
-									</Link>
-									<Link
-										className={classNames('bg-gray-900 text-white', 'rounded-md px-3 py-2 text-sm font-medium')}
-										to="/rejestracja">
-										Rejestracja
-									</Link>
+									{
+										paths.map((p) => (
+											<Link
+												className={classNames('bg-gray-900 text-white', 'rounded-md px-3 py-2 text-sm font-medium')}
+												to={p.to}>
+												{p.name}
+											</Link>
+										))
+									}
 								</div>
 							</div>
 						</div>
 					</div>
 				</Disclosure>
-				<main>
-					<Outlet />
+				<main className={""}>
+					<Outlet/>
 				</main>
 			</div>
 		</>

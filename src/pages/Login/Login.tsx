@@ -1,4 +1,4 @@
-export function Login() {
+export function LoginPage() {
 	return (
 		<>
 			<div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
@@ -21,7 +21,7 @@ export function Login() {
 									type="email"
 									autoComplete="email"
 									required
-									className="block pl-4 pr-4 w-full rounded-md border-0 py-1.5 text-white shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+									className="block pl-2 pr-2 w-full rounded-md border-0 py-1.5 text-white shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
 								/>
 							</div>
 						</div>
@@ -44,7 +44,7 @@ export function Login() {
 									type="password"
 									autoComplete="current-password"
 									required
-									className="block w-full rounded-md border-0 py-1.5 text-white shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+									className="block w-full pl-2 pr-2 rounded-md border-0 py-1.5 text-white shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
 								/>
 							</div>
 						</div>
