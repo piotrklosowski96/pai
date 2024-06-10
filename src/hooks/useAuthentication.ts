@@ -1,18 +1,6 @@
-export interface AuthenticationData {
+import { useContext } from "react";
+import { AuthenticationContext, IAuthenticationContext } from "../context/AuthenticationContext.tsx";
 
-}
-
-export const useAuthentication = () => {
-	// const { setUser } = useContext(ApplicationContext)
-	// const { setItem } = useLocalStorage()
-	//
-	// const login = (authenticationData: AuthenticationData) => {
-	// 	setUser(authenticationData)
-	// }
-	//
-	// const logout = () => {
-	// 	setUser(null)
-	// }
-
-	return {  }
-}
+export const useAuthentication = (): IAuthenticationContext => {
+	return useContext(AuthenticationContext);
+};

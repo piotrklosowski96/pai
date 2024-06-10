@@ -1,0 +1,1545 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "Api Documentation",
+    "version": "1.0",
+    "title": "Api Documentation",
+    "termsOfService": "urn:tos",
+    "contact": {},
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0"
+    }
+  },
+  "host": "localhost:8083",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "auth-controller",
+      "description": "Auth Controller"
+    },
+    {
+      "name": "basic-error-controller",
+      "description": "Basic Error Controller"
+    },
+    {
+      "name": "cinemas-controller",
+      "description": "Cinemas Controller"
+    },
+    {
+      "name": "movies-controller",
+      "description": "Movies Controller"
+    }
+  ],
+  "paths": {
+    "/auth/signin": {
+      "post": {
+        "tags": [
+          "auth-controller"
+        ],
+        "summary": "authenticateUser",
+        "operationId": "authenticateUserUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "loginDto",
+            "description": "loginDto",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/LoginDto"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/GeneralUserInfoResponse"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/auth/signup": {
+      "post": {
+        "tags": [
+          "auth-controller"
+        ],
+        "summary": "registerUser",
+        "operationId": "registerUserUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "signUpDto",
+            "description": "signUpDto",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SignUpDto"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/cinemas": {
+      "get": {
+        "tags": [
+          "cinemas-controller"
+        ],
+        "summary": "Get cinemas",
+        "operationId": "getCinemasUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/GetCinemasResponse"
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/cinemas/{cinemaId}": {
+      "get": {
+        "tags": [
+          "cinemas-controller"
+        ],
+        "summary": "Get cinema by ID",
+        "operationId": "getCinemaUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "cinemaId",
+            "in": "path",
+            "description": "cinemaId",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/GetCinemasResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/cinemas/{cinemaId}/screenings": {
+      "get": {
+        "tags": [
+          "cinemas-controller"
+        ],
+        "summary": "Get screenings by cinema ID",
+        "operationId": "getScreeningsUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "cinemaId",
+            "in": "path",
+            "description": "cinemaId",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/GetScreeningResponse"
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "cinemas-controller"
+        ],
+        "summary": "Add new screening",
+        "operationId": "addScreeningUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/AddScreeningRequestTest"
+            }
+          },
+          {
+            "name": "cinemaId",
+            "in": "path",
+            "description": "cinemaId",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/GetScreeningResponse"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/cinemas/{cinemaId}/screenings/{screeningId}": {
+      "get": {
+        "tags": [
+          "cinemas-controller"
+        ],
+        "summary": "Get screening by ID",
+        "operationId": "getScreeningByIdUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "screeningId",
+            "in": "path",
+            "description": "screeningId",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/GetScreeningResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "cinemas-controller"
+        ],
+        "summary": "Delete screening by ID",
+        "operationId": "deleteScreeningUsingDELETE",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "cinemaId",
+            "in": "path",
+            "description": "cinemaId",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "name": "screeningId",
+            "in": "path",
+            "description": "screeningId",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "cinemas-controller"
+        ],
+        "summary": "Update screening by ID",
+        "operationId": "updateScreeningUsingPATCH",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/EditScreeningRequest"
+            }
+          },
+          {
+            "name": "cinemaId",
+            "in": "path",
+            "description": "cinemaId",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "name": "screeningId",
+            "in": "path",
+            "description": "screeningId",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/GetScreeningResponse"
+            }
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/cinemas/{cinemaId}/screens": {
+      "get": {
+        "tags": [
+          "cinemas-controller"
+        ],
+        "summary": "Get cinema screens",
+        "operationId": "getScreensUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "cinemaId",
+            "in": "path",
+            "description": "cinemaId",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/GetScreenResponse"
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/error": {
+      "get": {
+        "tags": [
+          "basic-error-controller"
+        ],
+        "summary": "errorHtml",
+        "operationId": "errorHtmlUsingGET",
+        "produces": [
+          "text/html"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ModelAndView"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "basic-error-controller"
+        ],
+        "summary": "errorHtml",
+        "operationId": "errorHtmlUsingHEAD",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "text/html"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ModelAndView"
+            }
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "basic-error-controller"
+        ],
+        "summary": "errorHtml",
+        "operationId": "errorHtmlUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "text/html"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ModelAndView"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "basic-error-controller"
+        ],
+        "summary": "errorHtml",
+        "operationId": "errorHtmlUsingPUT",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "text/html"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ModelAndView"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "basic-error-controller"
+        ],
+        "summary": "errorHtml",
+        "operationId": "errorHtmlUsingDELETE",
+        "produces": [
+          "text/html"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ModelAndView"
+            }
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      },
+      "options": {
+        "tags": [
+          "basic-error-controller"
+        ],
+        "summary": "errorHtml",
+        "operationId": "errorHtmlUsingOPTIONS",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "text/html"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ModelAndView"
+            }
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "basic-error-controller"
+        ],
+        "summary": "errorHtml",
+        "operationId": "errorHtmlUsingPATCH",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "text/html"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ModelAndView"
+            }
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/movies": {
+      "get": {
+        "tags": [
+          "movies-controller"
+        ],
+        "summary": "getMovies",
+        "operationId": "getMoviesUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/GeneralMovieResponse"
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "movies-controller"
+        ],
+        "summary": "addMovie",
+        "operationId": "addMovieUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "request",
+            "description": "request",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/AddMovieRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Movie"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/movies/{movieId}": {
+      "get": {
+        "tags": [
+          "movies-controller"
+        ],
+        "summary": "getMovie",
+        "operationId": "getMovieUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "movieId",
+            "in": "path",
+            "description": "movieId",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/GeneralMovieResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "movies-controller"
+        ],
+        "summary": "deleteMovie",
+        "operationId": "deleteMovieUsingDELETE",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "movieId",
+            "in": "path",
+            "description": "movieId",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "movies-controller"
+        ],
+        "summary": "updateMovie",
+        "operationId": "updateMovieUsingPATCH",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "movieId",
+            "in": "path",
+            "description": "movieId",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "body",
+            "name": "request",
+            "description": "request",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/EditMovieRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/GeneralMovieResponse"
+            }
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "AddMovieRequest": {
+      "type": "object",
+      "properties": {
+        "adsDuration": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "bigImageSource": {
+          "type": "string"
+        },
+        "cleaningServiceDuration": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "description": {
+          "type": "string"
+        },
+        "genre": {
+          "type": "string"
+        },
+        "minAge": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "movieDuration": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "posterSource": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "trailerSource": {
+          "type": "string"
+        }
+      },
+      "title": "AddMovieRequest"
+    },
+    "AddScreeningRequestTest": {
+      "type": "object",
+      "properties": {
+        "movieId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "movieSoundType": {
+          "type": "string",
+          "enum": [
+            "DUBBING",
+            "LECTOR",
+            "SUBTITLES"
+          ]
+        },
+        "movieType": {
+          "type": "string",
+          "enum": [
+            "D2",
+            "D3"
+          ]
+        },
+        "screenId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "startDate": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "title": "AddScreeningRequestTest"
+    },
+    "EditMovieRequest": {
+      "type": "object",
+      "properties": {
+        "adsDuration": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "bigImageSource": {
+          "type": "string"
+        },
+        "cleaningServiceDuration": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "description": {
+          "type": "string"
+        },
+        "genre": {
+          "type": "string"
+        },
+        "minAge": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "movieDuration": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "posterSource": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "trailerSource": {
+          "type": "string"
+        }
+      },
+      "title": "EditMovieRequest"
+    },
+    "EditScreeningRequest": {
+      "type": "object",
+      "properties": {
+        "screenId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "startDate": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "title": "EditScreeningRequest"
+    },
+    "GeneralMovieResponse": {
+      "type": "object",
+      "properties": {
+        "adsDuration": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "averageRating": {
+          "type": "number",
+          "format": "double"
+        },
+        "bigImageSource": {
+          "type": "string"
+        },
+        "cleaningServiceDuration": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "description": {
+          "type": "string"
+        },
+        "genre": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "minAge": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "movieDuration": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "posterSource": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "BRAK_SEANSU",
+            "GRANY",
+            "NIE_GRANY",
+            "PREMIERA",
+            "PRZED_PREMIERA",
+            "ZARCHIWIZOWANY"
+          ]
+        },
+        "title": {
+          "type": "string"
+        },
+        "trailerSource": {
+          "type": "string"
+        }
+      },
+      "title": "GeneralMovieResponse"
+    },
+    "GeneralUserInfoResponse": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "roles": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/definitions/Role"
+          }
+        },
+        "userId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "username": {
+          "type": "string"
+        }
+      },
+      "title": "GeneralUserInfoResponse"
+    },
+    "GetCinemasResponse": {
+      "type": "object",
+      "properties": {
+        "city": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "mailAddress": {
+          "type": "string"
+        },
+        "phoneNumber": {
+          "type": "string"
+        },
+        "postalCode": {
+          "type": "string"
+        },
+        "street": {
+          "type": "string"
+        }
+      },
+      "title": "GetCinemasResponse"
+    },
+    "GetScreenResponse": {
+      "type": "object",
+      "properties": {
+        "screenId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "screenName": {
+          "type": "string"
+        }
+      },
+      "title": "GetScreenResponse"
+    },
+    "GetScreeningResponse": {
+      "type": "object",
+      "properties": {
+        "adsDuration": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "bigImageSource": {
+          "type": "string"
+        },
+        "cleaningServiceDuration": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "description": {
+          "type": "string"
+        },
+        "genre": {
+          "type": "string"
+        },
+        "movieDuration": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "movieId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "movieSoundType": {
+          "type": "string",
+          "enum": [
+            "DUBBING",
+            "LECTOR",
+            "SUBTITLES"
+          ]
+        },
+        "movieType": {
+          "type": "string",
+          "enum": [
+            "D2",
+            "D3"
+          ]
+        },
+        "posterSource": {
+          "type": "string"
+        },
+        "screenId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "screeningEnd": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "screeningId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "screeningStart": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "title": {
+          "type": "string"
+        },
+        "trailerSource": {
+          "type": "string"
+        }
+      },
+      "title": "GetScreeningResponse"
+    },
+    "LoginDto": {
+      "type": "object",
+      "properties": {
+        "password": {
+          "type": "string"
+        },
+        "usernameOrEmail": {
+          "type": "string"
+        }
+      },
+      "title": "LoginDto"
+    },
+    "ModelAndView": {
+      "type": "object",
+      "properties": {
+        "empty": {
+          "type": "boolean"
+        },
+        "model": {
+          "type": "object"
+        },
+        "modelMap": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        },
+        "reference": {
+          "type": "boolean"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "ACCEPTED",
+            "ALREADY_REPORTED",
+            "BAD_GATEWAY",
+            "BAD_REQUEST",
+            "BANDWIDTH_LIMIT_EXCEEDED",
+            "CHECKPOINT",
+            "CONFLICT",
+            "CONTINUE",
+            "CREATED",
+            "DESTINATION_LOCKED",
+            "EXPECTATION_FAILED",
+            "FAILED_DEPENDENCY",
+            "FORBIDDEN",
+            "FOUND",
+            "GATEWAY_TIMEOUT",
+            "GONE",
+            "HTTP_VERSION_NOT_SUPPORTED",
+            "IM_USED",
+            "INSUFFICIENT_SPACE_ON_RESOURCE",
+            "INSUFFICIENT_STORAGE",
+            "INTERNAL_SERVER_ERROR",
+            "I_AM_A_TEAPOT",
+            "LENGTH_REQUIRED",
+            "LOCKED",
+            "LOOP_DETECTED",
+            "METHOD_FAILURE",
+            "METHOD_NOT_ALLOWED",
+            "MOVED_PERMANENTLY",
+            "MOVED_TEMPORARILY",
+            "MULTIPLE_CHOICES",
+            "MULTI_STATUS",
+            "NETWORK_AUTHENTICATION_REQUIRED",
+            "NON_AUTHORITATIVE_INFORMATION",
+            "NOT_ACCEPTABLE",
+            "NOT_EXTENDED",
+            "NOT_FOUND",
+            "NOT_IMPLEMENTED",
+            "NOT_MODIFIED",
+            "NO_CONTENT",
+            "OK",
+            "PARTIAL_CONTENT",
+            "PAYLOAD_TOO_LARGE",
+            "PAYMENT_REQUIRED",
+            "PERMANENT_REDIRECT",
+            "PRECONDITION_FAILED",
+            "PRECONDITION_REQUIRED",
+            "PROCESSING",
+            "PROXY_AUTHENTICATION_REQUIRED",
+            "REQUESTED_RANGE_NOT_SATISFIABLE",
+            "REQUEST_ENTITY_TOO_LARGE",
+            "REQUEST_HEADER_FIELDS_TOO_LARGE",
+            "REQUEST_TIMEOUT",
+            "REQUEST_URI_TOO_LONG",
+            "RESET_CONTENT",
+            "SEE_OTHER",
+            "SERVICE_UNAVAILABLE",
+            "SWITCHING_PROTOCOLS",
+            "TEMPORARY_REDIRECT",
+            "TOO_EARLY",
+            "TOO_MANY_REQUESTS",
+            "UNAUTHORIZED",
+            "UNAVAILABLE_FOR_LEGAL_REASONS",
+            "UNPROCESSABLE_ENTITY",
+            "UNSUPPORTED_MEDIA_TYPE",
+            "UPGRADE_REQUIRED",
+            "URI_TOO_LONG",
+            "USE_PROXY",
+            "VARIANT_ALSO_NEGOTIATES"
+          ]
+        },
+        "view": {
+          "$ref": "#/definitions/View"
+        },
+        "viewName": {
+          "type": "string"
+        }
+      },
+      "title": "ModelAndView"
+    },
+    "Movie": {
+      "type": "object",
+      "properties": {
+        "adsDuration": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "averageRating": {
+          "type": "number",
+          "format": "double"
+        },
+        "bigImageSource": {
+          "type": "string"
+        },
+        "cleaningServiceDuration": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "description": {
+          "type": "string"
+        },
+        "genre": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "minAge": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "movieDuration": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "posterSource": {
+          "type": "string"
+        },
+        "screenings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Screening"
+          }
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "BRAK_SEANSU",
+            "GRANY",
+            "NIE_GRANY",
+            "PREMIERA",
+            "PRZED_PREMIERA",
+            "ZARCHIWIZOWANY"
+          ]
+        },
+        "title": {
+          "type": "string"
+        },
+        "trailerSource": {
+          "type": "string"
+        }
+      },
+      "title": "Movie"
+    },
+    "Role": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "title": "Role"
+    },
+    "Screen": {
+      "type": "object",
+      "properties": {
+        "capacity": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "screenName": {
+          "type": "string"
+        }
+      },
+      "title": "Screen"
+    },
+    "Screening": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "movie": {
+          "$ref": "#/definitions/Movie"
+        },
+        "movieSoundType": {
+          "type": "string",
+          "enum": [
+            "DUBBING",
+            "LECTOR",
+            "SUBTITLES"
+          ]
+        },
+        "movieType": {
+          "type": "string",
+          "enum": [
+            "D2",
+            "D3"
+          ]
+        },
+        "screen": {
+          "$ref": "#/definitions/Screen"
+        },
+        "startDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "tickets": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Ticket"
+          }
+        }
+      },
+      "title": "Screening"
+    },
+    "SignUpDto": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "username": {
+          "type": "string"
+        }
+      },
+      "title": "SignUpDto"
+    },
+    "Ticket": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "screening": {
+          "$ref": "#/definitions/Screening"
+        },
+        "seatNumber": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "seatRow": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "ticketType": {
+          "type": "string",
+          "enum": [
+            "NORMALNY",
+            "SENIOR",
+            "ULGOWY"
+          ]
+        },
+        "user": {
+          "$ref": "#/definitions/User"
+        }
+      },
+      "title": "Ticket"
+    },
+    "User": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "password": {
+          "type": "string"
+        },
+        "roles": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/definitions/Role"
+          }
+        },
+        "tickets": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Ticket"
+          }
+        },
+        "username": {
+          "type": "string"
+        },
+        "watchedMovies": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GeneralMovieResponse"
+          }
+        }
+      },
+      "title": "User"
+    },
+    "View": {
+      "type": "object",
+      "properties": {
+        "contentType": {
+          "type": "string"
+        }
+      },
+      "title": "View"
+    }
+  }
+}

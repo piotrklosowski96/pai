@@ -1,4 +1,3 @@
-import { Carousel } from "../../components/carousel/Carousel.tsx";
 import { useState } from "react";
 
 const slides = [
@@ -19,17 +18,10 @@ export default function Main() {
 				{
 					slides.map((slideSrc, i) => (
 						<div hidden={i !== curr}>
-							<img className="absolute w-full h-full object-cover object-center"
-									 src={slideSrc}
-									 alt=""
-							/>
+							<img className="absolute w-full h-full object-cover object-center" src={slideSrc} alt=""/>
 							<div className="absolute inset-0 flex items-center justify-between p-12">
-								<button onClick={previousSlide}
-												className='p-3 rounded-full shadow bg-white/80 text-gray-800 hover:bg-white'>
-								</button>
-								<button onClick={nextSlide}
-												className='p-3 rounded-full shadow bg-white/80 text-gray-800 hover:bg-white'>
-								</button>
+								<button onClick={previousSlide} className='p-3 rounded-full shadow bg-white/80 text-gray-800 hover:bg-white'></button>
+								<button onClick={nextSlide} className='p-3 rounded-full shadow bg-white/80 text-gray-800 hover:bg-white'></button>
 							</div>
 						</div>
 					))

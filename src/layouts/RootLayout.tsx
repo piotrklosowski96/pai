@@ -1,12 +1,18 @@
-import { Disclosure } from '@headlessui/react'
+import { Disclosure } from "@headlessui/react";
 import { Link, Outlet } from "react-router-dom";
+import { ApplicationContext } from "../context/context";
+import { AuthenticationProvider } from "../context/AuthenticationContext";
 
 function classNames(...classes: string[]) {
 	return classes.filter(Boolean).join(' ')
 }
 
-export function LayoutWrapper() {
+export default function Root() {
 	const paths = [
+		{
+			name: "Strona główna",
+			to: "/",
+		},
 		{
 			name: "Administracja",
 			to: "/administracja",
@@ -65,7 +71,15 @@ export function LayoutWrapper() {
 					</div>
 				</Disclosure>
 				<main className={""}>
-					<Outlet/>
+					<ApplicationContext.Provider value={{
+						user: null,
+						setUser: () => {
+						},
+					}}>
+						<AuthenticationProvider>
+							<Outlet/>
+						</AuthenticationProvider>
+					</ApplicationContext.Provider>
 				</main>
 			</div>
 		</>
