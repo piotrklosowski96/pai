@@ -1,4 +1,4 @@
-import { Link, Outlet, useLoaderData, useNavigate } from "react-router-dom";
+import { Link, Outlet, useLoaderData } from "react-router-dom";
 import { getCinemasUsingGet } from "../../client";
 
 export const cinemasLoader = async () => {
@@ -7,43 +7,34 @@ export const cinemasLoader = async () => {
 
 export function AdministrationLayoutWrapper() {
 	const cinemas = useLoaderData()
-	const navigate = useNavigate();
 
 	return (
-		<>
-			<div className={"grid grid-cols-[1fr_4fr] gap-1"}>
-				<div>
+		<div className={"flex justify-center w-full"}>
+			<div className={"flex justify-center w-full max-w-screen-2xl"}>
+				<div className={"w-2/12"}>
 					<Link
-						className={"bg-gray-900 text-white rounded-md px-3 py-2 text-sm font-medium"}
+						className={"block bg-gray-900 text-white rounded-md my-2 mr-2 px-3 py-2 text-sm font-medium"}
 						to="movies">
 						Filmy
 					</Link>
-					<br/>
-					<br/>
 					{
 						cinemas.map((c) => (
 							<>
 								<Link
-									className={"bg-gray-900 text-white rounded-md px-3 py-2 text-sm font-medium"}
-									onClick={(e) => {
-										e.preventDefault();
-										navigate(`screenings/${c.id}`)
-									}}
+									key={`screenings/${c.id}`}
+									className={"block bg-gray-900 text-white rounded-md my-2 mr-2 px-3 py-2 text-sm font-medium"}
 									to={`screenings/${c.id}`}
 								>
 									{c.city}
 								</Link>
-								{/*TODO: Nope.*/}
-								<br/>
-								<br/>
 							</>
 						))
 					}
 				</div>
-				<div>
-					<Outlet />
+				<div className={"w-10/12"}>
+					<Outlet/>
 				</div>
 			</div>
-		</>
+		</div>
 	)
 }

@@ -48,15 +48,15 @@ const router = createBrowserRouter([
 						loader: moviesLoader
 					},
 					{
-						path: "screenings/:cinemaId",
-						element: <ScreeningsScheduler localizer={localizer}/>,
-						// loader: screeningsSchedulerLoader,
-					},
-					{
 						path: "movies/:movieId/edit",
 						element: <EditMovie/>,
-            loader: editMovieLoader,
-					}
+						loader: editMovieLoader,
+					},
+					{
+						path: "screenings/:cinemaId",
+						element: <ScreeningsScheduler localizer={localizer}/>,
+						loader: screeningsSchedulerLoader,
+					},
 				]
 			},
 			{

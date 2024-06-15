@@ -43,36 +43,21 @@ export interface IScreeningsSchedulerProps {
 }
 
 export function ScreeningsScheduler({localizer}: IScreeningsSchedulerProps) {
-	// const schedulerData = useLoaderData()
+	const schedulerData = useLoaderData()
 
-	// const [cinemaId] = useState(schedulerData.cinemaId);
-	// const [scheduledScreenings, setScheduledScreenings] = useState<IScreening[]>(schedulerData.screenings)
-	// const [screens, setScreens] = useState(schedulerData.screens)
-	// const [movies, setMovies] = useState<IMovie[]>(schedulerData.availableMovies)
-	// const [draggedScreening, setDraggedScreening] = useState<IScreening | null>(null)
-
-	const [scheduledScreenings, setScheduledScreenings] = useState<IScreening[]>([])
-	const [screens, setScreens] = useState([])
-	const [movies, setMovies] = useState<IMovie[]>([])
+	const [cinemaId, setCinemaId] = useState(schedulerData.cinemaId);
+	const [scheduledScreenings, setScheduledScreenings] = useState<IScreening[]>(schedulerData.screenings)
+	const [screens, setScreens] = useState(schedulerData.screens)
+	const [movies, setMovies] = useState<IMovie[]>(schedulerData.availableMovies)
 	const [draggedScreening, setDraggedScreening] = useState<IScreening | null>(null)
 
-	let { cinemaId } = useParams();
 	useEffect(() => {
-		const screenings = (await getScreeningsUsingGet({cinemaId: params.cinemaId})).map(s => {
-			return {
-				...s,
-				screeningStart: new Date(s.screeningStart!  * 1000),
-				screeningEnd: new Date(s.screeningEnd!  * 1000),
-			} as unknown as IScreening;
-		})
+		setCinemaId(schedulerData.cinemaId)
+		setScheduledScreenings(schedulerData.screenings)
+		setScreens(schedulerData.screens)
+		setMovies(schedulerData.availableMovies)
+	}, [schedulerData]);
 
-
-			cinemaId: params.cinemaId,
-			screenings: screenings,
-			screens: await getScreensUsingGet({cinemaId: params.cinemaId}),
-			setMovies(await getMoviesUsingGet())
-
-	}, []);
 
 	const handleDragStart = useCallback((screening: IScreening) => setDraggedScreening(screening), [])
 	const dragFromOutsideItem = useCallback(() => draggedScreening, [draggedScreening])
@@ -226,6 +211,7 @@ export function ScreeningsScheduler({localizer}: IScreeningsSchedulerProps) {
 					{
 						movies.map((movie: IScreening) => (
 							<Screening
+								key={movie.id}
 								movieId={movie.id}
 								title={movie.title}
 								format={movie.type}

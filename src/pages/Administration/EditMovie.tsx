@@ -44,73 +44,79 @@ export function EditMovie() {
 
 	return (
 		<>
-			<form>
-				<label>
-					Tytuł:
-					<input type={"text"} value={editedMovie.name}/>
-				</label>
-				<br/>
-				<label>
-					Gatunek:
-					<select defaultValue={selectedGenre} onChange={(e) => setSelectedGenre(e.target.value)}>
-						{
-							genres.map((g) => (
-								<option value={g.name}>{g.name}</option>
-							))
-						}
-						<option>Nowy...</option>
-					</select>
-				</label>
-				<br/>
-				<label>
-					Kategoria wiekowa
+			<div className={"w-full"}>
+				<form>
 					<label>
-						<input type="radio" name={"ageRestriction"} value={"7+"} checked={selectedAgeRestriction === "7+"} onChange={(e) => setSelectedAgeRestriction(e.target.value)}/>
-						7+
+						Tytuł:
+						<input type={"text"} value={editedMovie.name}/>
 					</label>
+					<br/>
 					<label>
-						<input type="radio" name={"ageRestriction"} value={"13+"} checked={selectedAgeRestriction === "13+"} onChange={(e) => setSelectedAgeRestriction(e.target.value)}/>
-						13+
+						Gatunek:
+						<select defaultValue={selectedGenre} onChange={(e) => setSelectedGenre(e.target.value)}>
+							{
+								genres.map((g) => (
+									<option value={g.name}>{g.name}</option>
+								))
+							}
+							<option>Nowy...</option>
+						</select>
 					</label>
+					<br/>
 					<label>
-						<input type="radio" name={"ageRestriction"} value={"16+"} checked={selectedAgeRestriction === "16+"} onChange={(e) => setSelectedAgeRestriction(e.target.value)}/>
-						16+
+						Kategoria wiekowa
+						<label>
+							<input type="radio" name={"ageRestriction"} value={"7+"} checked={selectedAgeRestriction === "7+"}
+										 onChange={(e) => setSelectedAgeRestriction(e.target.value)}/>
+							7+
+						</label>
+						<label>
+							<input type="radio" name={"ageRestriction"} value={"13+"} checked={selectedAgeRestriction === "13+"}
+										 onChange={(e) => setSelectedAgeRestriction(e.target.value)}/>
+							13+
+						</label>
+						<label>
+							<input type="radio" name={"ageRestriction"} value={"16+"} checked={selectedAgeRestriction === "16+"}
+										 onChange={(e) => setSelectedAgeRestriction(e.target.value)}/>
+							16+
+						</label>
+						<label>
+							<input type="radio" name={"ageRestriction"} value={"18+"} checked={selectedAgeRestriction === "18+"}
+										 onChange={(e) => setSelectedAgeRestriction(e.target.value)}/>
+							18+
+						</label>
 					</label>
+					<br/>
 					<label>
-						<input type="radio" name={"ageRestriction"} value={"18+"} checked={selectedAgeRestriction === "18+"} onChange={(e) => setSelectedAgeRestriction(e.target.value)}/>
-						18+
+						Czas trwania:
+						<input type="number" min={0} defaultValue={0} value={editedMovie.length}/> min.
 					</label>
-				</label>
-				<br/>
-				<label>
-					Czas trwania:
-					<input type="number" min={0} defaultValue={0} value={editedMovie.length}/> min.
-				</label>
-				<br/>
-				<label>
-					Opis:
-					<textarea rows={10} cols={80} value={editedMovie.description}/>
-				</label>
-				<br/>
-				<label>
-					Plakat
-					<input type="file"/>
-				</label>
-				<br/>
-				<label>
-					Obraz tła
-					<input type="file"/>
-				</label>
-				<br/>
-				<label>
-					Link do zwiastunu
-					<input type="url" value={editedMovie.imageURL}/>
-				</label>
-				<br/>
-				<button type="submit">
-					Zapisz
-				</button>
-			</form>
+					<br/>
+					<label>
+						Opis:
+						<textarea rows={10} cols={80} value={editedMovie.description}/>
+					</label>
+					<br/>
+					<label>
+						Plakat
+						<input type="file"/>
+					</label>
+					<br/>
+					<label>
+						Obraz tła
+						<input type="file"/>
+					</label>
+					<br/>
+					<label>
+						Link do zwiastunu
+						<input type="url" value={editedMovie.imageURL}/>
+					</label>
+					<br/>
+					<button type="submit">
+						Zapisz
+					</button>
+				</form>
+			</div>
 		</>
 	)
 }
