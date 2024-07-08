@@ -1,121 +1,292 @@
+/* eslint-disable no-mixed-spaces-and-tabs */
 import { useLoaderData } from "react-router-dom";
-import { useState } from "react";
+import { useCallback, useState } from "react";
+import { addMovieUsingPost, getMovieUsingGet } from "../../client";
+import { IMovie } from "../../models/movie.ts";
 
-export const editMovieLoader = async () => {
-	return {
-		name: "Avatar: Istota Wody",
-		description: "Akcja filmu Avatar: Istota wody rozgrywa się ponad dziesięć lat po wydarzeniach z pierwszej części. To opowieść o rodzinie Jake’a i Neytiri oraz ich staraniach, by zapewnić bezpieczeństwo sobie i swoim dzieciom, mimo tragedii, których wspólnie doświadczają i bitew, które muszą stoczyć, aby przeżyć.* Drodzy widzowie w filmie Avatar: Istota wody znajduje się kilka scen z dynamicznymi efektami świetlnymi, które mogą powodować dyskomfort u widzów wrażliwych na światło i wpływać na osoby z epilepsją fotogenną.",
-		genre: "Sci-Fi",
-		ageRestriction: "13+",
-		length: 193,
-		status: "archived",
-		imageURL: "https://a.allegroimg.com/original/11d976/334547e342fbb91918a02f507c6e/Plakat-Avatar-Istota-wody-AVATAR-2-2022-100x70"
-	}
+export const editMovieLoader = async ({params}) => {
+	return getMovieUsingGet({movieId: params.movieId});
 }
 
-export function EditMovie() {
-	const genres = [
-		{
-			name: "Akcja"
-		},
-		{
-			name: "Horror"
-		},
-		{
-			name: "Komedia"
-		},
-		{
-			name: "Thriller"
-		},
-		{
-			name: "Romans"
-		},
-		{
-			name: "Sensacja"
-		},
-		{
-			name: "Sci-Fi"
-		},
-	]
-	const editedMovie = useLoaderData()
+const genres = [
+	{
+		name: "Akcja"
+	},
+	{
+		name: "Horror"
+	},
+	{
+		name: "Komedia"
+	},
+	{
+		name: "Thriller"
+	},
+	{
+		name: "Romans"
+	},
+	{
+		name: "Sensacja"
+	},
+	{
+		name: "Sci-Fi"
+	},
+]
 
-	const [ selectedGenre, setSelectedGenre ] = useState(editedMovie.genre)
-	const [ selectedAgeRestriction, setSelectedAgeRestriction ] = useState(editedMovie.ageRestriction)
+export function EditMovie() {
+	const editedMovie = useLoaderData() as IMovie
+
+	const [title, setTitle] = useState(editedMovie.title)
+	const [genre, setGenre] = useState(editedMovie.genre)
+	const [ageRestriction, setAgeRestriction] = useState(editedMovie.minAge)
+	const [adsDuration, setAdsDuration] = useState(editedMovie.adsDuration)
+	const [movieDuration, setMovieDuration] = useState(editedMovie.movieDuration)
+	const [cleaningServiceDuration, setCleaningServiceDuration] = useState(editedMovie.cleaningServiceDuration)
+	const [description, setDescription] = useState(editedMovie.description)
+	const [posterImage, setPosterImage] = useState(editedMovie.posterImageSource);
+	const [carouselImage, setCarouselImage] = useState(editedMovie.mainPageImageSource);
+
+	const onChangePicture = useCallback((e, imageHandler) => {
+		if (e.target.files[0]) {
+			const reader = new FileReader();
+			reader.addEventListener("load", () => {
+				imageHandler(reader.result);
+			});
+			reader.readAsDataURL(e.target.files[0]);
+		}
+	}, [])
+	const onMovieSave = useCallback(() => {
+		addMovieUsingPost({
+			request: {
+				title,
+				genre,
+				minAge: ageRestriction,
+				adsDuration,
+				movieDuration,
+				cleaningServiceDuration,
+				description,
+				posterSource: posterImage,
+				bigImageSource: carouselImage,
+			}
+		})
+	}, [])
 
 	return (
 		<>
-			<div className={"w-full"}>
-				<form>
-					<label>
-						Tytuł:
-						<input type={"text"} value={editedMovie.name}/>
+			<div className={"flex w-full"}>
+				<div className={"flex w-6/12 p-4"}>
+					{/*Obrazek plakatu*/}
+					<div className={"w-1/2 pr-2"}>
+						<h1 className="font-semibold">
+							Obrazek plakatu:
+						</h1>
+						<div className={"flex justify-center items-center rounded border-2 w-full min-h-40"}>
+							<label className={"flex justify-center items-center relative"} htmlFor={"poster-input"}>
+								<svg className={"absolute"} width="48" height="48" viewBox="0 0 24 24" fill="none"
+										 xmlns="http://www.w3.org/2000/svg">
+									<path
+										fillRule={"evenodd"}
+										clipRule={"evenodd"}
+										d="M2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12ZM12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4Z"
+										fill="currentColor"
+									/>
+									<path
+										fillRule={"evenodd"}
+										clipRule={"evenodd"}
+										d="M13 7C13 6.44772 12.5523 6 12 6C11.4477 6 11 6.44772 11 7V11H7C6.44772 11 6 11.4477 6 12C6 12.5523 6.44772 13 7 13H11V17C11 17.5523 11.4477 18 12 18C12.5523 18 13 17.5523 13 17V13H17C17.5523 13 18 12.5523 18 12C18 11.4477 17.5523 11 17 11H13V7Z"
+										fill="currentColor"
+									/>
+								</svg>
+								<img className={"object-cover"} src={posterImage} alt={""}/>
+							</label>
+							<input id="poster-input" type="file" hidden={true} onChange={(e) => {
+								onChangePicture(e, setPosterImage)
+							}}/>
+						</div>
+					</div>
+					{/*Obrazek na stronie głównej*/}
+					<div className={"w-1/2 pl-2"}>
+						<h1 className="font-semibold">
+							Obrazek na stronie głównej:
+						</h1>
+						<div className={"flex justify-center items-center rounded border-2 w-full min-h-40"}>
+							<label className={"flex justify-center items-center relative"} htmlFor={"carousel-input"}>
+								<svg className={"absolute"}
+										 width="48"
+										 height="48"
+										 viewBox="0 0 24 24"
+										 fill="none"
+										 xmlns="http://www.w3.org/2000/svg"
+								>
+									<path
+										fillRule={"evenodd"}
+										clipRule={"evenodd"}
+										d="M2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12ZM12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4Z"
+										fill="currentColor"
+									/>
+									<path
+										fillRule={"evenodd"}
+										clipRule={"evenodd"}
+										d="M13 7C13 6.44772 12.5523 6 12 6C11.4477 6 11 6.44772 11 7V11H7C6.44772 11 6 11.4477 6 12C6 12.5523 6.44772 13 7 13H11V17C11 17.5523 11.4477 18 12 18C12.5523 18 13 17.5523 13 17V13H17C17.5523 13 18 12.5523 18 12C18 11.4477 17.5523 11 17 11H13V7Z"
+										fill="currentColor"
+									/>
+								</svg>
+								<img className={"object-cover"} src={carouselImage} alt={""}/>
+							</label>
+							<input id="carousel-input" type="file" hidden={true} onChange={(e) => {
+								onChangePicture(e, setCarouselImage)
+							}}/>
+						</div>
+					</div>
+				</div>
+				<div className={"w-6/12 p-4"}>
+					{/*Tytuł*/}
+					<label className={"block pb-2"}>
+						<h1 className={"font-semibold"}>
+							Tytuł:
+						</h1>
+						<input type={"text"} className={"block w-full rounded border-2"} value={title} onChange={(e) => {
+							setTitle(e.target.value)
+						}}/>
 					</label>
-					<br/>
-					<label>
-						Gatunek:
-						<select defaultValue={selectedGenre} onChange={(e) => setSelectedGenre(e.target.value)}>
+					{/*Gatunek*/}
+					<label className={"block pb-2"}>
+						<h1 className={"font-semibold"}>
+							Gatunek:
+						</h1>
+						<select className={"block w-full rounded border-2"}
+										defaultValue={genre}
+										onChange={(e) => setGenre(e.target.value)}
+						>
 							{
 								genres.map((g) => (
 									<option value={g.name}>{g.name}</option>
 								))
 							}
-							<option>Nowy...</option>
 						</select>
 					</label>
-					<br/>
-					<label>
-						Kategoria wiekowa
-						<label>
-							<input type="radio" name={"ageRestriction"} value={"7+"} checked={selectedAgeRestriction === "7+"}
-										 onChange={(e) => setSelectedAgeRestriction(e.target.value)}/>
+					{/*Kategoria wiekowa*/}
+					<label className={"block pb-2"}>
+						<h1 className={"font-semibold"}>
+							Kategoria wiekowa
+						</h1>
+						<label className={"mr-4"}>
+							<input
+								type="radio"
+								name={"ageRestriction"}
+								value={7}
+								checked={ageRestriction === 7}
+								onChange={(e) => setAgeRestriction(e.target.valueAsNumber)}
+							/>
 							7+
 						</label>
-						<label>
-							<input type="radio" name={"ageRestriction"} value={"13+"} checked={selectedAgeRestriction === "13+"}
-										 onChange={(e) => setSelectedAgeRestriction(e.target.value)}/>
+						<label className={"mr-4"}>
+							<input
+								type="radio"
+								name={"ageRestriction"}
+								value={13}
+								checked={ageRestriction === 13}
+								onChange={(e) => setAgeRestriction(e.target.valueAsNumber)}/>
 							13+
 						</label>
-						<label>
-							<input type="radio" name={"ageRestriction"} value={"16+"} checked={selectedAgeRestriction === "16+"}
-										 onChange={(e) => setSelectedAgeRestriction(e.target.value)}/>
+						<label className={"mr-4"}>
+							<input
+								type="radio"
+								name={"ageRestriction"}
+								value={16}
+								checked={ageRestriction === 16}
+								onChange={(e) => setAgeRestriction(e.target.valueAsNumber)}/>
 							16+
 						</label>
-						<label>
-							<input type="radio" name={"ageRestriction"} value={"18+"} checked={selectedAgeRestriction === "18+"}
-										 onChange={(e) => setSelectedAgeRestriction(e.target.value)}/>
+						<label className={"mr-4"}>
+							<input
+								type="radio"
+								name={"ageRestriction"}
+								value={18}
+								checked={ageRestriction === 18}
+								onChange={(e) => setAgeRestriction(e.target.valueAsNumber)}/>
 							18+
 						</label>
 					</label>
-					<br/>
-					<label>
-						Czas trwania:
-						<input type="number" min={0} defaultValue={0} value={editedMovie.length}/> min.
+					{/*Czas trwania bloku reklamowego*/}
+					<label className={"block pb-2"}>
+						<h1 className={"flex-none font-semibold"}>
+							Czas trwania bloku reklamowego:
+						</h1>
+						<div className={"flex"}>
+							<input className={"grow rounded border-2"}
+										 type="number"
+										 min={0}
+										 defaultValue={0}
+										 value={adsDuration}
+										 onChange={(e) => {
+											 setAdsDuration(e.target.valueAsNumber);
+										 }}
+							/>
+							<h1 className={"flex-none pl-2 inline"}>
+								min.
+							</h1>
+						</div>
 					</label>
-					<br/>
-					<label>
-						Opis:
-						<textarea rows={10} cols={80} value={editedMovie.description}/>
+					{/*Czas trwania filmu*/}
+					<label className={"block pb-2"}>
+						<h1 className={"flex-none font-semibold"}>
+							Czas trwania filmu:
+						</h1>
+						<div className={"flex"}>
+							<input className={"grow rounded border-2"}
+										 type="number"
+										 min={0}
+										 defaultValue={0}
+										 value={movieDuration}
+										 onChange={(e) => {
+											 setMovieDuration(e.target.valueAsNumber);
+										 }}
+							/>
+							<h1 className={"flex-none pl-2 inline"}>
+								min.
+							</h1>
+						</div>
 					</label>
-					<br/>
-					<label>
-						Plakat
-						<input type="file"/>
+					{/*Czas sprzątania po seansie*/}
+					<label className={"block pb-2"}>
+						<h1 className={"flex-none font-semibold"}>
+							Czas sprzątania po seansie:
+						</h1>
+						<div className={"flex"}>
+							<input className={"grow rounded border-2"}
+										 type="number"
+										 min={0}
+										 defaultValue={0}
+										 value={cleaningServiceDuration}
+										 onChange={(e) => {
+											 setCleaningServiceDuration(e.target.valueAsNumber);
+										 }}
+							/>
+							<h1 className={"flex-none pl-2 inline"}>
+								min.
+							</h1>
+						</div>
 					</label>
-					<br/>
-					<label>
-						Obraz tła
-						<input type="file"/>
+					{/*Opis*/}
+					<label className={"block pb-2"}>
+						<h1 className={"font-semibold"}>
+							Opis:
+						</h1>
+						<textarea className={"block w-full rounded border-2"}
+											rows={8}
+											cols={80}
+											value={description}
+											onChange={(e) => {
+												setDescription(e.target.value);
+											}}
+						/>
 					</label>
-					<br/>
-					<label>
-						Link do zwiastunu
-						<input type="url" value={editedMovie.imageURL}/>
-					</label>
-					<br/>
-					<button type="submit">
-						Zapisz
+					<button type="submit" onClick={onMovieSave}>
+						<div className={"pl-8 pr-8 pt-1 pb-1 rounded border-2"}>
+							Zapisz
+						</div>
 					</button>
-				</form>
+				</div>
 			</div>
 		</>
 	)

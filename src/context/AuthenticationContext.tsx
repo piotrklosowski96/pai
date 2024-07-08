@@ -1,11 +1,17 @@
-import React, { createContext, useState } from "react";
+import {
+	useState,
+	createContext,
+	ReactNode,
+} from "react";
 import { useLocalStorage } from "../hooks/useLocalStorage.ts";
 import { useNavigate } from "react-router-dom";
-import { authenticateUserUsingPost, type AuthenticateUserUsingPostResponse, GeneralUserInfoResponse } from "../client";
+import { authenticateUserUsingPost, LoginResponse } from "../client";
+import { jwtDecode, JwtPayload } from "jwt-decode";
+import { IUser } from "./User.ts";
 
 export interface IAuthenticationContext {
 	token?: string
-	user?: string
+	user?: IUser | null
 	login: (username: string, password: string) => void
 	logout: () => void
 }
@@ -15,33 +21,44 @@ export const AuthenticationContext = createContext<IAuthenticationContext>({
 	logout: () => {}
 });
 
-type Props = {
-	children: React.ReactNode
+type PaiJWT = JwtPayload & {
+	roles: string[];
 }
 
-export const AuthenticationProvider = ({children}: Props) => {
-	const { setItem, removeItem } = useLocalStorage()
-	const [ user, setUser ] = useState("");
+type AuthenticationProviderProps = {
+	children: ReactNode
+}
+
+export const AuthenticationProvider = ({children}: AuthenticationProviderProps) => {
+	const { setItem } = useLocalStorage()
+	const [ user, setUser ] = useState<IUser | null>(null);
 	const [ token, setToken ] = useState("");
 	const navigate = useNavigate();
 
-	const login = (username: string, password: string) => {
-		authenticateUserUsingPost({loginDto: {
-				usernameOrEmail: username,
+	const login = async (username: string, password: string) => {
+		const response = await authenticateUserUsingPost({
+			loginRequest: {
+				username: username,
 				password: password,
-		}}).then((response: AuthenticateUserUsingPostResponse) => {
-			setItem("user", JSON.stringify(response))
-			navigate("/");
-		}).catch((e) => {
-			console.log(e);
-		})
+			}
+		}) as LoginResponse
+
+		if (!response.token) {
+			throw new Error("Token not found")
+		}
+		const jwtDecodedUser = jwtDecode<PaiJWT>(response.token)
+
+		setItem("token", response.token)
+		setToken(response.token);
+		setUser({
+			roles: jwtDecodedUser.roles
+		} as IUser)
+		navigate("/");
 	};
 
 	const logout = (): void => {
-		setUser("");
 		setToken("");
-		removeItem("user");
-		localStorage.removeItem("site");
+		setUser(null);
 		navigate("/login");
 	};
 

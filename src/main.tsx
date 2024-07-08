@@ -10,6 +10,10 @@ import { ContactPage } from "./pages/Contact/Contact.tsx";
 import { LoginPage } from "./pages/Login/Login.tsx";
 import { RegistrationPage } from "./pages/Registration/Registration.tsx";
 import {
+	Main,
+	mainLoader,
+} from "./pages/Main/Main.tsx";
+import {
   AdministrationLayoutWrapper,
   cinemasLoader,
 } from "./pages/Administration/AdministrationLayoutWrapper.tsx";
@@ -29,14 +33,21 @@ import {
 import { momentLocalizer } from "react-big-calendar";
 import moment from 'moment'
 import { OpenAPI } from "./client";
+
 const localizer = momentLocalizer(moment)
 
 const router = createBrowserRouter([
 	{
 		path: "/",
 		element: <Root/>,
+
 		errorElement: <ErrorPage/>,
 		children: [
+			{
+				path: "/",
+				element: <Main/>,
+				loader: mainLoader,
+			},
 			{
 				path: "/administracja",
 				element: <AdministrationLayoutWrapper/>,
@@ -61,7 +72,8 @@ const router = createBrowserRouter([
 			},
 			{
 				path: "/repertuar",
-				element: <RepertoirePage/>
+				element: <RepertoirePage/>,
+				loader: cinemasLoader,
 			},
 			{
 				path: "/wydarzenia",
@@ -84,6 +96,12 @@ const router = createBrowserRouter([
 ])
 
 OpenAPI.BASE = "http://localhost:8083"
+OpenAPI.interceptors.request.use(config => {
+	const token = localStorage.getItem('token');
+	config.headers!.Authorization =  token ? `Bearer ${token}` : '';
+
+	return config;
+})
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
 	<React.StrictMode>

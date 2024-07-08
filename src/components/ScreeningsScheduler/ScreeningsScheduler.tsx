@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Calendar, DateLocalizer, Views } from 'react-big-calendar'
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css"
 import "react-big-calendar/lib/css/react-big-calendar.css"
@@ -6,7 +6,7 @@ import withDragAndDrop, {
 	DragFromOutsideItemArgs,
 	EventInteractionArgs
 } from 'react-big-calendar/lib/addons/dragAndDrop'
-import { redirect, useLoaderData, useParams, useRevalidator } from "react-router-dom";
+import { useLoaderData } from "react-router-dom";
 import {
 	AddScreeningRequestTest,
 	addScreeningUsingPost,
@@ -25,8 +25,8 @@ export const screeningsSchedulerLoader = async ({params}) => {
 	const screenings = (await getScreeningsUsingGet({cinemaId: params.cinemaId})).map(s => {
 		return {
 			...s,
-			screeningStart: new Date(s.screeningStart!  * 1000),
-			screeningEnd: new Date(s.screeningEnd!  * 1000),
+			screeningStart: new Date(s.screeningStart! * 1000),
+			screeningEnd: new Date(s.screeningEnd! * 1000),
 		} as unknown as IScreening;
 	})
 
@@ -57,7 +57,6 @@ export function ScreeningsScheduler({localizer}: IScreeningsSchedulerProps) {
 		setScreens(schedulerData.screens)
 		setMovies(schedulerData.availableMovies)
 	}, [schedulerData]);
-
 
 	const handleDragStart = useCallback((screening: IScreening) => setDraggedScreening(screening), [])
 	const dragFromOutsideItem = useCallback(() => draggedScreening, [draggedScreening])
@@ -92,7 +91,7 @@ export function ScreeningsScheduler({localizer}: IScreeningsSchedulerProps) {
 	}, [setScheduledScreenings])
 	const newScreening = useCallback((screening: IScreening) => {
 		setScheduledScreenings((screenings: IScreening[]) => {
-			return [...screenings, screening ]
+			return [...screenings, screening]
 		})
 	}, [setScheduledScreenings])
 	const onDropFromOutside = useCallback((args: DragFromOutsideItemArgs) => {
@@ -149,14 +148,14 @@ export function ScreeningsScheduler({localizer}: IScreeningsSchedulerProps) {
 		},
 	}), [])
 	const components = useMemo(() => ({
-		event: ({event, title}) => {
+		event: ({event, title}: { event: IMovie, title: string }) => {
 			const totalTime = event.adsDuration + event.movieDuration + event.cleaningServiceDuration
 			const adsDurationHeight = 100 * event.adsDuration / totalTime
 			const movieDurationHeight = 100 * event.movieDuration / totalTime
 			const cleaningServiceDurationHeight = 100 * event.cleaningServiceDuration / totalTime
 
 			return (
-				<div className={"h-full"}>
+				<div className={"w-full h-full"}>
 					<p style={{
 						height: adsDurationHeight + "%",
 						backgroundColor: "rgb(239, 189, 28)",
@@ -176,6 +175,31 @@ export function ScreeningsScheduler({localizer}: IScreeningsSchedulerProps) {
 						borderRadius: "0 0 4px 4px",
 					}}>Sprzątanie
 					</p>
+				</div>
+			)
+		},
+		timeSlotWrapper: ({value, resource}: {value: Date, resource: string}) => {
+			const hourString = value.getHours().toLocaleString('pl-PL', {minimumIntegerDigits: 2})
+			const minutesString = value.getMinutes().toLocaleString('pl-PL', {minimumIntegerDigits: 2})
+
+			if (!resource) {
+				return (
+					<>
+						<div className={"h-full w-full bg-gray-700 pl-2 pr-2"}>
+							<h1 className={"h-full w-full text-white"}>
+								{hourString}:{minutesString}
+							</h1>
+						</div>
+					</>
+				)
+			}
+
+			return <></>
+		},
+		dayColumnWrapper: ({children}: { children: React.ReactNode }) => {
+			return (
+				<div className={`bg-gray-700 rbc-day-slot rbc-time-column`}>
+					{children}
 				</div>
 			)
 		},

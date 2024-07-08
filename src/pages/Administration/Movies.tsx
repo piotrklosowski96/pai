@@ -24,9 +24,9 @@ export function Movies() {
 		// 	setMovies([...movies])
 		// })
 	}
-	const deleteMovie = (movieId: number) => {
+	const deleteMovie = (movieId: string) => {
 		deleteMovieUsingDelete({movieId: movieId}).then(() => {
-			setMovies(movies.filter(movie => movie.movieId !== movieId))
+			setMovies(movies.filter(movie => movie.id !== movieId))
 		})
 	}
 
@@ -35,19 +35,20 @@ export function Movies() {
 			{
 				movies.map((movie) => (
 					<Movie
-						movieId={movie.movieId}
+						id={movie.id}
 						title={movie.title}
 						description={movie.description}
 						genre={movie.genre}
 						minAge={movie.minAge}
 						duration={movie.duration}
 						status={movie.status}
+						posterImageSource={movie.posterImageSource}
 						bigImageSource={movie.bigImageSource}
 						averageRating={movie.averageRating}
 						posterSource={movie.posterSource}
 						trailerSource={movie.trailerSource}
-						onArchive={() => archiveMovie(movie.movieId)}
-						onDelete={() => deleteMovie(movie.movieId)}
+						onArchive={() => archiveMovie(movie.id)}
+						onDelete={() => deleteMovie(movie.id)}
 					/>
 				))
 			}

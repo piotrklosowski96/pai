@@ -1,50 +1,81 @@
 import { useState } from "react";
+import { getMoviesUsingGet } from "../../client";
+import { useLoaderData } from "react-router-dom";
 
-const slides = [
-	"puss_in_boots.jpg",
-	"night.jpg",
-	"avatar.jpg",
-]
+interface IMainPageMovie {
+	title: string
+	description: string
+	mainPageImageSource: string
+}
 
-export default function Main() {
-	const [curr, setCurr] = useState(0)
+export const mainLoader = async () => {
+	const movies = await getMoviesUsingGet()
 
-	const previousSlide = () => setCurr((curr) => (curr === 0 ? slides.length - 1 : curr - 1))
-	const nextSlide = () => setCurr((curr) => (curr === slides.length - 1 ? 0 : curr + 1))
+	return movies.map((response) => {
+		return {
+			title: response.title,
+			description: response.description,
+			mainPageImageSource: response.mainPageImageSource,
+		} as IMainPageMovie
+	})
+}
+
+export function Main() {
+	const movies = useLoaderData() as Array<IMainPageMovie>
+
+	const [slide, setSlide] = useState(movies[0])
+	const [slideIndex, setSlideIndex] = useState(0);
+
+	const previousSlide = () => {
+		const previousSlideIndex = slideIndex === 0 ? movies.length - 1 : slideIndex - 1
+		setSlideIndex(previousSlideIndex)
+		setSlide(movies[previousSlideIndex])
+	}
+	const nextSlide = () => {
+		const nextSlideIndex = slideIndex === movies.length - 1 ? 0 : slideIndex + 1
+		setSlideIndex(nextSlideIndex)
+		setSlide(movies[nextSlideIndex])
+	}
 
 	return (
 		<>
-			<div className="grid bg-gray-100">
-				{
-					slides.map((slideSrc, i) => (
-						<div hidden={i !== curr}>
-							<img className="absolute w-full h-full object-cover object-center" src={slideSrc} alt=""/>
-							<div className="absolute inset-0 flex items-center justify-between p-12">
-								<button onClick={previousSlide} className='p-3 rounded-full shadow bg-white/80 text-gray-800 hover:bg-white'></button>
-								<button onClick={nextSlide} className='p-3 rounded-full shadow bg-white/80 text-gray-800 hover:bg-white'></button>
-							</div>
-						</div>
-					))
-				}
-
-
+			<div className="flex absolute top-0 -z-50 w-full h-full">
+				<div>
+					{/*Plakat*/}
+					<img className={"absolute w-full h-full object-cover object-center"} src={slide.mainPageImageSource} alt=""/>
+					{/*Tint plakatu*/}
+					<div className={"absolute w-full h-full bg-black opacity-60"}></div>
+					{/*Przyciski zmiany slajdu*/}
+					<div className={"absolute w-full h-full inset-0 flex items-center justify-between p-12"}>
+						<button onClick={previousSlide}
+										className='p-3 rounded-full shadow bg-white/80 text-gray-800 hover:bg-white'/>
+						<button onClick={nextSlide}
+										className='p-3 rounded-full shadow bg-white/80 text-gray-800 hover:bg-white'/>
+					</div>
+					{/*Tytuł i przyciski*/}
+					<div className={"flex flex-col w-11/12 columns-1 absolute top-2/3 pl-32"}>
+						<h1 className={"uppercase text-8xl font-black -skew-x-12"}>
+							{slide.title}
+						</h1>
+						{/*Przycisk obejrzyj zwiastun*/}
+						<button className={"border-2 w-1/4 mt-8 pl-10 pr-10 pt-2 pb-2"} onClick={() => {
+							alert("DUPA")
+						}}>
+							<h2 className={"text-2xl font-semibold"}>
+								Obejrzyj zwiastun
+							</h2>
+						</button>
+						{/*Przycisk kup bilet*/}
+						<button className={"border-2 w-1/4 mt-4 pl-10 pr-10 pt-2 pb-2"} onClick={() => {
+							alert("DUPA")
+						}}>
+							<h2 className={"text-2xl font-semibold"}>
+								Kup bilet
+							</h2>
+						</button>
+					</div>
+				</div>
 			</div>
-
-			{/*<div className="grow-0 w-full h-full">*/}
-			{/*	<img className="w-full object-cover" src={"list_do_m5.jpg"} alt={""}/>*/}
-			{/*	/!*<img className="w-full" src={"puss_in_boots.jpg"} alt={""}/>*!/*/}
-			{/*</div>*/}
-
-			{/*<div className="w-full">*/}
-			{/*	<img className="w-full" src={"list_do_m5.jpg"} alt=""/>*/}
-
-
-			{/*	/!*<Carousel autoSlide={true}>*/}
-			{/*		{slides.map((s) => (*/}
-			{/*			<img className="w-full" src={s} alt=""/>*/}
-			{/*		))}*/}
-			{/*	</Carousel>*!/*/}
-			{/*</div>*/}
 		</>
 	)
 }

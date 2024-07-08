@@ -4,8 +4,8 @@ import { useState } from "react";
 export function LoginPage() {
 	const { login } = useAuthentication()
 
-	const [email, setEmail] = useState<string>("");
-	const [password, setPassword] = useState<string>("");
+	const [email, setEmail] = useState("");
+	const [password, setPassword] = useState("");
 
 	return (
 		<>

@@ -12,7 +12,6 @@ export interface IMovie {
 	cleaningServiceDuration: number
 	status: MovieStatus
 	averageRating: number
-	bigImageSource?: string
-	posterSource?: string
-	trailerSource?: string
+	posterImageSource?: string
+	mainPageImageSource?: string
 }

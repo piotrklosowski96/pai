@@ -1,5 +1,5 @@
 export interface ICinema {
-	id: number
+	id: string
 	city: string
 	mailAddress: string
 	phoneNumber: string

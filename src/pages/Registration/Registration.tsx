@@ -17,7 +17,7 @@ export function RegistrationPage() {
 
 	const registerNewUser = () => {
 		registerUserUsingPost({
-			signUpDto: {
+			registerRequest: {
 				email: email,
 				username: login,
 				password: password,
@@ -50,7 +50,7 @@ export function RegistrationPage() {
 									id="login"
 									name="login"
 									required
-									className="block w-full pl-2 pr-2 rounded-md border-0 py-1.5 text-white shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+									className="block w-full mt-2 pl-2 pr-2 rounded-md border-0 py-1.5 text-white shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
 									onInput={(e) => setLogin(e.currentTarget.value)}
 								/>
 							</label>
@@ -64,7 +64,7 @@ export function RegistrationPage() {
 								type="email"
 								autoComplete="email"
 								required
-								className="block w-full pl-2 pr-2 rounded-md border-0 py-1.5 text-white shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+								className="block w-full mt-2 pl-2 pr-2 rounded-md border-0 py-1.5 text-white shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
 								onInput={(e) => {
 									setEmail(e.currentTarget.value);
 								}}
@@ -79,7 +79,7 @@ export function RegistrationPage() {
 								type="password"
 								autoComplete="current-password"
 								required
-								className="block w-full pl-2 pr-2 rounded-md border-0 py-1.5 text-white shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+								className="block w-full mt-2 pl-2 pr-2 rounded-md border-0 py-1.5 text-white shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
 								onInput={(e) => {
 									setPassword(e.currentTarget.value);
 								}}
@@ -100,7 +100,7 @@ export function RegistrationPage() {
 								type="password"
 								autoComplete="current-password"
 								required
-								className="block w-full pl-2 pr-2 rounded-md border-0 py-1.5 text-white shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+								className="block w-full mt-2 pl-2 pr-2 rounded-md border-0 py-1.5 text-white shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
 								onInput={(e) => {
 									setPasswordConfirmation(e.currentTarget.value);
 								}}
