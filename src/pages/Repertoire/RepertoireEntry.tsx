@@ -1,5 +1,8 @@
 import { IRepertoireEntry } from "../../models/repertoireEntry.ts";
 
+import moment from 'moment'
+import 'moment/dist/locale/pl.js'
+
 export const RepertoireEntry = ({className, props}: {className: string, props: IRepertoireEntry}) => {
 	return (
 		<>
@@ -34,7 +37,7 @@ export const RepertoireEntry = ({className, props}: {className: string, props: I
 							return <>
 								<button className={"block bg-gray-900 text-white rounded-md my-2 mr-2 px-3 py-2 text-sm font-medium"}>
 									<div className={""}>
-										{new Date(screeningDate * 1000).toDateString()}
+										{moment(screeningDate * 1000).format("HH:mm").toUpperCase()}
 									</div>
 								</button>
 							</>

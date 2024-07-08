@@ -125,7 +125,7 @@ export function ScreeningsScheduler({localizer}: IScreeningsSchedulerProps) {
 			posterSource: draggedScreening.posterSource,
 			trailerSource: draggedScreening.trailerSource,
 		}
-
+		console.log("screening.screeningStart: ", screening.screeningStart);
 		addScreeningUsingPost({
 			cinemaId: cinemaId,
 			body: {

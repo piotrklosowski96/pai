@@ -26,6 +26,7 @@ import {
 	screeningsSchedulerLoader
 } from "./components/ScreeningsScheduler/ScreeningsScheduler.tsx";
 import {
+	createMovieLoader,
 	EditMovie,
 	editMovieLoader
 } from "./pages/Administration/EditMovie.tsx";
@@ -62,6 +63,11 @@ const router = createBrowserRouter([
 						path: "movies/:movieId/edit",
 						element: <EditMovie/>,
 						loader: editMovieLoader,
+					},
+					{
+						path: "movies/create",
+						element: <EditMovie/>,
+						loader: createMovieLoader,
 					},
 					{
 						path: "screenings/:cinemaId",

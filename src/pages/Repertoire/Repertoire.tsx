@@ -56,7 +56,7 @@ export function RepertoirePage() {
 			<div className={"flex flex-col w-full items-center"}>
 				{/*Wybór kina*/}
 				<section className={"flex w-full justify-center h-48 bg-black"}>
-					<div className={"flex flex-col justify-center w-full max-w-screen-xl"}>
+					<div className={"flex flex-col justify-center w-full pl-4 pr-4 max-w-screen-xl"}>
 						<h1 className={"text-4xl"}>Wybierz swoje kino</h1>
 						<label className={"block mt-4 pb-2"}>
 							<h1 className={"font-semibold"}>
@@ -89,7 +89,7 @@ export function RepertoirePage() {
 
 				{
 					selectedCinema &&
-            <section className={"flex w-full max-w-screen-xl items-center mt-2 "}>
+            <section className={"flex w-full max-w-screen-xl items-center mt-2 pl-4 pr-4"}>
 							<h1 className={"block mr-2"}>
 									Repertuar kina Wawel - {selectedCinema?.city}
 							</h1>
@@ -105,7 +105,7 @@ export function RepertoirePage() {
 											className={"block bg-gray-900 text-white rounded-md my-2 mr-2 px-3 py-2 text-sm font-medium"}
 											onClick={() => { setDate(date) }}
 										>
-											{moment(date).format("dd").toUpperCase()}
+											{moment(date).format("dd (DD.MM)").toUpperCase()}
 										</button>
 									)
 								})
@@ -118,7 +118,7 @@ export function RepertoirePage() {
 					{
 						selectedCinema &&
 							<>
-								<section className={"w-full"}>
+								<section className={"w-full pl-4 pr-4"}>
 									{
 										repertoire!.map((r) => <RepertoireEntry className={"mt-2 rounded-lg bg-gray-800"} props={r}/>)
 									}

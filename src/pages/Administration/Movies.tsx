@@ -1,4 +1,4 @@
-import { useLoaderData } from "react-router-dom";
+import { Link, useLoaderData } from "react-router-dom";
 import { Movie } from "./Movie.tsx";
 import {
 	deleteMovieUsingDelete,
@@ -32,26 +32,36 @@ export function Movies() {
 
 	return (
 		<>
-			{
-				movies.map((movie) => (
-					<Movie
-						id={movie.id}
-						title={movie.title}
-						description={movie.description}
-						genre={movie.genre}
-						minAge={movie.minAge}
-						duration={movie.duration}
-						status={movie.status}
-						posterImageSource={movie.posterImageSource}
-						bigImageSource={movie.bigImageSource}
-						averageRating={movie.averageRating}
-						posterSource={movie.posterSource}
-						trailerSource={movie.trailerSource}
-						onArchive={() => archiveMovie(movie.id)}
-						onDelete={() => deleteMovie(movie.id)}
-					/>
-				))
-			}
+			<div className={"flex flex-col"}>
+				<div className={"flex flex-col items-end"}>
+					<button className={"block bg-gray-900 text-white rounded-md mt-4 mb-4 px-2 py-2 text-sm font-medium"}>
+						<Link to={"create"}>
+							Dodaj nowy...
+						</Link>
+					</button>
+
+				</div>
+				{
+					movies.map((movie) => (
+						<Movie
+							id={movie.id}
+							title={movie.title}
+							description={movie.description}
+							genre={movie.genre}
+							minAge={movie.minAge}
+							duration={movie.duration}
+							status={movie.status}
+							posterImageSource={movie.posterImageSource}
+							bigImageSource={movie.bigImageSource}
+							averageRating={movie.averageRating}
+							posterSource={movie.posterSource}
+							trailerSource={movie.trailerSource}
+							onArchive={() => archiveMovie(movie.id)}
+							onDelete={() => deleteMovie(movie.id)}
+						/>
+					))
+				}
+			</div>
 		</>
 	)
 }

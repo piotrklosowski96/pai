@@ -1,7 +1,7 @@
 import {
 	useState,
 	createContext,
-	ReactNode,
+	ReactNode, useEffect,
 } from "react";
 import { useLocalStorage } from "../hooks/useLocalStorage.ts";
 import { useNavigate } from "react-router-dom";
@@ -30,10 +30,22 @@ type AuthenticationProviderProps = {
 }
 
 export const AuthenticationProvider = ({children}: AuthenticationProviderProps) => {
-	const { setItem } = useLocalStorage()
+	const { setItem, getItem } = useLocalStorage()
 	const [ user, setUser ] = useState<IUser | null>(null);
-	const [ token, setToken ] = useState("");
+	const [ token, setToken ] = useState<string | null>("");
 	const navigate = useNavigate();
+
+	useEffect(() => {
+		const tokenValue = getItem("token");
+		if (tokenValue) {
+			setToken(tokenValue);
+
+			const jwtDecodedUser = jwtDecode<PaiJWT>(tokenValue)
+			setUser({
+				roles: jwtDecodedUser.roles
+			} as IUser);
+		}
+	}, [])
 
 	const login = async (username: string, password: string) => {
 		const response = await authenticateUserUsingPost({

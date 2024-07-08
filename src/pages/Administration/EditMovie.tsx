@@ -1,11 +1,29 @@
-/* eslint-disable no-mixed-spaces-and-tabs */
-import { useLoaderData } from "react-router-dom";
+import { useLoaderData, useNavigate } from "react-router-dom";
 import { useCallback, useState } from "react";
-import { addMovieUsingPost, getMovieUsingGet } from "../../client";
+import { addMovieUsingPost, getMovieUsingGet, updateMovieUsingPatch } from "../../client";
 import { IMovie } from "../../models/movie.ts";
+import { MovieStatus } from "../../models/moveStatus.ts";
 
 export const editMovieLoader = async ({params}) => {
 	return getMovieUsingGet({movieId: params.movieId});
+}
+
+export const createMovieLoader = async () => {
+	return {
+		title: "",
+		genre: "",
+		minAge: 0,
+		adsDuration: 0,
+		movieDuration: 0,
+		cleaningServiceDuration: 0,
+		description: "",
+		posterImageSource: "",
+		mainPageImageSource: "",
+		movieId: "",
+		type: "D2",
+		status: MovieStatus.NIE_GRANY,
+		averageRating: 0.0
+	} as IMovie
 }
 
 const genres = [
@@ -34,7 +52,9 @@ const genres = [
 
 export function EditMovie() {
 	const editedMovie = useLoaderData() as IMovie
+	const navigate = useNavigate();
 
+	const [movieId] = useState(editedMovie.id);
 	const [title, setTitle] = useState(editedMovie.title)
 	const [genre, setGenre] = useState(editedMovie.genre)
 	const [ageRestriction, setAgeRestriction] = useState(editedMovie.minAge)
@@ -55,20 +75,47 @@ export function EditMovie() {
 		}
 	}, [])
 	const onMovieSave = useCallback(() => {
-		addMovieUsingPost({
-			request: {
-				title,
-				genre,
-				minAge: ageRestriction,
-				adsDuration,
-				movieDuration,
-				cleaningServiceDuration,
-				description,
-				posterSource: posterImage,
-				bigImageSource: carouselImage,
-			}
-		})
-	}, [])
+		if (movieId) {
+			updateMovieUsingPatch({
+				movieId: movieId,
+				request: {
+					title,
+					genre,
+					minAge: ageRestriction,
+					adsDuration,
+					movieDuration,
+					cleaningServiceDuration,
+					description,
+					posterSource: posterImage,
+					bigImageSource: carouselImage,
+				}
+			})
+		} else {
+			addMovieUsingPost({
+				request: {
+					title,
+					genre,
+					minAge: ageRestriction,
+					adsDuration,
+					movieDuration,
+					cleaningServiceDuration,
+					description,
+					posterSource: posterImage,
+					bigImageSource: carouselImage,
+				}
+			})
+		}
+	}, [movieId,
+		title,
+		genre,
+		ageRestriction,
+		adsDuration,
+		movieDuration,
+		cleaningServiceDuration,
+		description,
+		posterImage,
+		carouselImage
+	])
 
 	return (
 		<>
@@ -153,9 +200,10 @@ export function EditMovie() {
 						<h1 className={"font-semibold"}>
 							Gatunek:
 						</h1>
-						<select className={"block w-full rounded border-2"}
-										defaultValue={genre}
-										onChange={(e) => setGenre(e.target.value)}
+						<select
+							className={"block w-full rounded border-2"}
+							defaultValue={genre}
+							onChange={(e) => setGenre(e.target.value)}
 						>
 							{
 								genres.map((g) => (
@@ -174,8 +222,9 @@ export function EditMovie() {
 								type="radio"
 								name={"ageRestriction"}
 								value={7}
-								checked={ageRestriction === 7}
-								onChange={(e) => setAgeRestriction(e.target.valueAsNumber)}
+								onChange={(e) => {
+									setAgeRestriction(Number(e.target.value))
+								}}
 							/>
 							7+
 						</label>
@@ -184,8 +233,10 @@ export function EditMovie() {
 								type="radio"
 								name={"ageRestriction"}
 								value={13}
-								checked={ageRestriction === 13}
-								onChange={(e) => setAgeRestriction(e.target.valueAsNumber)}/>
+								onChange={(e) => {
+									setAgeRestriction(Number(e.target.value))
+								}}
+							/>
 							13+
 						</label>
 						<label className={"mr-4"}>
@@ -193,8 +244,10 @@ export function EditMovie() {
 								type="radio"
 								name={"ageRestriction"}
 								value={16}
-								checked={ageRestriction === 16}
-								onChange={(e) => setAgeRestriction(e.target.valueAsNumber)}/>
+								onChange={(e) => {
+									setAgeRestriction(Number(e.target.value))
+								}}
+							/>
 							16+
 						</label>
 						<label className={"mr-4"}>
@@ -202,8 +255,10 @@ export function EditMovie() {
 								type="radio"
 								name={"ageRestriction"}
 								value={18}
-								checked={ageRestriction === 18}
-								onChange={(e) => setAgeRestriction(e.target.valueAsNumber)}/>
+								onChange={(e) => {
+									setAgeRestriction(Number(e.target.value))
+								}}
+							/>
 							18+
 						</label>
 					</label>
@@ -213,14 +268,15 @@ export function EditMovie() {
 							Czas trwania bloku reklamowego:
 						</h1>
 						<div className={"flex"}>
-							<input className={"grow rounded border-2"}
-										 type="number"
-										 min={0}
-										 defaultValue={0}
-										 value={adsDuration}
-										 onChange={(e) => {
-											 setAdsDuration(e.target.valueAsNumber);
-										 }}
+							<input
+								className={"grow rounded border-2"}
+								type="number"
+								min={0}
+								defaultValue={0}
+								value={adsDuration}
+								onChange={(e) => {
+									setAdsDuration(e.target.valueAsNumber);
+								}}
 							/>
 							<h1 className={"flex-none pl-2 inline"}>
 								min.
@@ -233,14 +289,15 @@ export function EditMovie() {
 							Czas trwania filmu:
 						</h1>
 						<div className={"flex"}>
-							<input className={"grow rounded border-2"}
-										 type="number"
-										 min={0}
-										 defaultValue={0}
-										 value={movieDuration}
-										 onChange={(e) => {
-											 setMovieDuration(e.target.valueAsNumber);
-										 }}
+							<input
+								className={"grow rounded border-2"}
+								type="number"
+								min={0}
+								defaultValue={0}
+								value={movieDuration}
+								onChange={(e) => {
+									setMovieDuration(e.target.valueAsNumber);
+								}}
 							/>
 							<h1 className={"flex-none pl-2 inline"}>
 								min.
@@ -253,14 +310,15 @@ export function EditMovie() {
 							Czas sprzątania po seansie:
 						</h1>
 						<div className={"flex"}>
-							<input className={"grow rounded border-2"}
-										 type="number"
-										 min={0}
-										 defaultValue={0}
-										 value={cleaningServiceDuration}
-										 onChange={(e) => {
-											 setCleaningServiceDuration(e.target.valueAsNumber);
-										 }}
+							<input
+								className={"grow rounded border-2"}
+								type="number"
+								min={0}
+								defaultValue={0}
+								value={cleaningServiceDuration}
+								onChange={(e) => {
+									setCleaningServiceDuration(e.target.valueAsNumber);
+								}}
 							/>
 							<h1 className={"flex-none pl-2 inline"}>
 								min.
@@ -272,16 +330,23 @@ export function EditMovie() {
 						<h1 className={"font-semibold"}>
 							Opis:
 						</h1>
-						<textarea className={"block w-full rounded border-2"}
-											rows={8}
-											cols={80}
-											value={description}
-											onChange={(e) => {
-												setDescription(e.target.value);
-											}}
+						<textarea
+							className={"block w-full rounded border-2"}
+							rows={8}
+							cols={80}
+							value={description}
+							onChange={(e) => {
+								setDescription(e.target.value);
+							}}
 						/>
 					</label>
-					<button type="submit" onClick={onMovieSave}>
+					<button
+						type="submit"
+						onClick={() => {
+							onMovieSave();
+							navigate(-1);
+						}}
+					>
 						<div className={"pl-8 pr-8 pt-1 pb-1 rounded border-2"}>
 							Zapisz
 						</div>
