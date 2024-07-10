@@ -33,7 +33,8 @@ export function Movies() {
 	return (
 		<>
 			<div className={"flex flex-col"}>
-				<div className={"flex flex-col items-end"}>
+				<h1 className={"text-4xl"}>Dostępne filmy</h1>
+				<div className={"flex flex-col items-start"}>
 					<button className={"block bg-gray-900 text-white rounded-md mt-4 mb-4 px-2 py-2 text-sm font-medium"}>
 						<Link to={"create"}>
 							Dodaj nowy...

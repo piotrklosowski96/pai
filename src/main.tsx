@@ -1,11 +1,14 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+	createBrowserRouter,
+	Navigate,
+	RouterProvider
+} from "react-router-dom";
 import Root from "./layouts/RootLayout.tsx";
 import ErrorPage from "./pages/ErrorPage/ErrorPage.tsx";
 import { RepertoirePage } from "./pages/Repertoire/Repertoire.tsx";
-import { EventsPage } from "./pages/Events/Events.tsx";
 import { ContactPage } from "./pages/Contact/Contact.tsx";
 import { LoginPage } from "./pages/Login/Login.tsx";
 import { RegistrationPage } from "./pages/Registration/Registration.tsx";
@@ -30,6 +33,10 @@ import {
 	EditMovie,
 	editMovieLoader
 } from "./pages/Administration/EditMovie.tsx";
+import {
+	SeatSelection,
+	seatsLoader
+} from "./pages/SeatSelection/SeatSelection.tsx";
 
 import { momentLocalizer } from "react-big-calendar";
 import moment from 'moment'
@@ -41,7 +48,6 @@ const router = createBrowserRouter([
 	{
 		path: "/",
 		element: <Root/>,
-
 		errorElement: <ErrorPage/>,
 		children: [
 			{
@@ -50,14 +56,23 @@ const router = createBrowserRouter([
 				loader: mainLoader,
 			},
 			{
+				path: "/seats",
+				element: <SeatSelection/>,
+				loader: seatsLoader,
+			},
+			{
 				path: "/administracja",
 				element: <AdministrationLayoutWrapper/>,
         loader: cinemasLoader,
 				children: [
 					{
+						index: true,
+						element: <Navigate to="movies" />
+					},
+					{
 						path: "movies",
 						element: <Movies/>,
-						loader: moviesLoader
+						loader: moviesLoader,
 					},
 					{
 						path: "movies/:movieId/edit",
@@ -80,10 +95,6 @@ const router = createBrowserRouter([
 				path: "/repertuar",
 				element: <RepertoirePage/>,
 				loader: cinemasLoader,
-			},
-			{
-				path: "/wydarzenia",
-				element: <EventsPage/>
 			},
 			{
 				path: "/kontakt",

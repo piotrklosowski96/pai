@@ -38,7 +38,7 @@ export function ContactPage() {
 	]
 
 	return (
-		<>
+		<div className={"flex flex-col w-full items-center justify-center"}>
 			{localizations.map((l) => (
 				<div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
 					<div>
@@ -47,12 +47,12 @@ export function ContactPage() {
 							width="400" height="250" loading="lazy"
 							referrerPolicy="no-referrer-when-downgrade">
 						</iframe>
-						<h1>{l.city}</h1>
+						<h1 className={"text-lg"}>{l.city}</h1>
 						<h1>{l.street}, {l.postalCode} {l.city}</h1>
 						<h1>{l.mail}</h1>
 					</div>
 				</div>
 			))}
-		</>
+		</div>
 	)
 }
