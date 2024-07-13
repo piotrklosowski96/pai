@@ -5,12 +5,12 @@ import {
 } from "react";
 import { useLocalStorage } from "../hooks/useLocalStorage.ts";
 import { useNavigate } from "react-router-dom";
-import { authenticateUserUsingPost, LoginResponse } from "../client";
+import { authenticateUser, LoginResponse } from "../client";
 import { jwtDecode, JwtPayload } from "jwt-decode";
 import { IUser } from "./User.ts";
 
 export interface IAuthenticationContext {
-	token?: string
+	token?: string | null
 	user?: IUser | null
 	login: (username: string, password: string) => void
 	logout: () => void
@@ -48,8 +48,8 @@ export const AuthenticationProvider = ({children}: AuthenticationProviderProps) 
 	}, [])
 
 	const login = async (username: string, password: string) => {
-		const response = await authenticateUserUsingPost({
-			loginRequest: {
+		const response = await authenticateUser({
+			requestBody: {
 				username: username,
 				password: password,
 			}

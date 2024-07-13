@@ -1,15 +1,15 @@
 import { Link, useLoaderData } from "react-router-dom";
 import { Movie } from "./Movie.tsx";
 import {
-	deleteMovieUsingDelete,
-	getMoviesUsingGet,
-	GetMoviesUsingGetResponse
+	deleteMovie,
+	getMovies,
+	GetMoviesResponse
 } from "../../client";
 import { IMovie } from "../../models/movie.ts";
 import { useState } from "react";
 
-export const moviesLoader = async (): Promise<GetMoviesUsingGetResponse> => {
-	return getMoviesUsingGet();
+export const moviesLoader = async (): Promise<GetMoviesResponse> => {
+	return getMovies();
 }
 
 export function Movies() {
@@ -25,7 +25,7 @@ export function Movies() {
 		// })
 	}
 	const deleteMovie = (movieId: string) => {
-		deleteMovieUsingDelete({movieId: movieId}).then(() => {
+		deleteMovie({movieId: movieId}).then(() => {
 			setMovies(movies.filter(movie => movie.id !== movieId))
 		})
 	}

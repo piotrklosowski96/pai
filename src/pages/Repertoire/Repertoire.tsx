@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { ICinema } from "../../models/cinema.ts";
 import { useLoaderData } from "react-router-dom";
 import { IScreening } from "../../models/screening.ts";
-import { getScreeningsUsingGet } from "../../client";
+import { getScreenings } from "../../client";
 import { IRepertoireEntry } from "../../models/repertoireEntry.ts";
 import { RepertoireEntry } from "./RepertoireEntry.tsx";
 
@@ -22,7 +22,7 @@ export function RepertoirePage() {
 			return
 		}
 
-		getScreeningsUsingGet({
+		getScreenings({
 			cinemaId: selectedCinema!.id,
 		}).then((response) => {
 			return response as unknown as IScreening[];

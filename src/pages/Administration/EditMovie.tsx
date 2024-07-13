@@ -1,11 +1,15 @@
 import { useLoaderData, useNavigate } from "react-router-dom";
 import { useCallback, useState } from "react";
-import { addMovieUsingPost, getMovieUsingGet, updateMovieUsingPatch } from "../../client";
+import {
+	addMovie,
+	getMovie,
+	updateMovie
+} from "../../client";
 import { IMovie } from "../../models/movie.ts";
 import { MovieStatus } from "../../models/moveStatus.ts";
 
 export const editMovieLoader = async ({params}) => {
-	return getMovieUsingGet({movieId: params.movieId});
+	return getMovie({movieId: params.movieId});
 }
 
 export const createMovieLoader = async () => {
@@ -76,9 +80,9 @@ export function EditMovie() {
 	}, [])
 	const onMovieSave = useCallback(() => {
 		if (movieId) {
-			updateMovieUsingPatch({
+			updateMovie({
 				movieId: movieId,
-				request: {
+				requestBody: {
 					title,
 					genre,
 					minAge: ageRestriction,
@@ -91,8 +95,8 @@ export function EditMovie() {
 				}
 			})
 		} else {
-			addMovieUsingPost({
-				request: {
+			addMovie({
+				requestBody: {
 					title,
 					genre,
 					minAge: ageRestriction,
@@ -128,8 +132,7 @@ export function EditMovie() {
 						</h1>
 						<div className={"flex justify-center items-center rounded border-2 w-full min-h-40"}>
 							<label className={"flex justify-center items-center relative"} htmlFor={"poster-input"}>
-								<svg className={"absolute"} width="48" height="48" viewBox="0 0 24 24" fill="none"
-										 xmlns="http://www.w3.org/2000/svg">
+								<svg className={"absolute"} width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 									<path
 										fillRule={"evenodd"}
 										clipRule={"evenodd"}

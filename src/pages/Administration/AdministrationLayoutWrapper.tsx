@@ -1,8 +1,8 @@
 import { Link, Outlet, useLoaderData } from "react-router-dom";
-import { getCinemasUsingGet } from "../../client";
+import { getCinemas } from "../../client";
 
 export const cinemasLoader = async () => {
-	return getCinemasUsingGet();
+	return getCinemas();
 }
 
 export function AdministrationLayoutWrapper() {

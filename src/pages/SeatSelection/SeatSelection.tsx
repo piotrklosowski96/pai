@@ -178,21 +178,14 @@ export const seatsLoader = () => {
 			"rowOffset": 0.0,
 			"columnOffset": 0.0
 		},
-		{
-			"seatId": "454c4de4-6107-4fc1-b35b-aeb9cfc76ad8",
-			"index": 0,
-			"rowIndex": 3,
-			"columnIndex": 4,
-			"rowOffset": 0.0,
-			"columnOffset": 0.0
-		},
+
 		{
 			"seatId": "86bef07b-07bc-4756-8de4-cb31e9a32a34",
 			"index": 0,
 			"rowIndex": 3,
 			"columnIndex": 5,
 			"rowOffset": 0.0,
-			"columnOffset": 0.0
+			"columnOffset": 50.0
 		}
 	]
 
@@ -205,23 +198,70 @@ export const seatsLoader = () => {
 
 	return {
 		seats,
-		rowsCount: 2,
-		columnsCount: 2,
+		rowsCount: Math.max(...seats.map(s => s.rowIndex)) + 1,
+		columnsCount: Math.max(...seats.map(s => s.columnIndex)) + 1,
 	}
 }
 
 export const SeatSelection = () => {
 	const seats = useLoaderData()
-
 	console.log(seats)
+
+	const columnStep = 100 / seats.columnsCount
+	const rowStep = 100 / seats.rowsCount
+	const step = Math.min(100 / seats.columnsCount, 100 / seats.rowsCount)
 
 	return (
 		<>
-			<div>
-				{
-
-				}
+			<div className={"w-1/2 relative"}>
+				<div className={"relative w-full aspect-square"}>
+					{
+						seats.seats.map((seat, i) => {
+							return (
+								<div className={"absolute flex p-2 items-center"} style={{
+									left: `${seat.columnIndex * step}%`,
+									top: `${seat.rowIndex * step}%`,
+									width: `${step}%`,
+									height: `${step}%`,
+								}}>
+									<div className={"flex relative w-full aspect-square"} style={{
+										left: `${seat.columnOffset}%`,
+										top: `${seat.rowOffset}%`,
+										backgroundColor: seat.columnIndex % 2 ? '#000' : '#fff',
+									}}>
+										<h1>{i}</h1>
+									</div>
+								</div>
+							)
+						})
+					}
+				</div>
 			</div>
+
+			{/*<div className={"w-1/2"}>*/}
+			{/*	<div className={`grid grid-cols-${seats.columnsCount} grid-rows-${seats.rowsCount}`}>*/}
+			{/*		{*/}
+			{/*			seats.seats.map((seat, i) => {*/}
+			{/*				return (*/}
+			{/*					<div className={" flex p-2 items-center"} style={{*/}
+			{/*						// left: `${seat.columnIndex * step}%`,*/}
+			{/*						// top: `${seat.rowIndex * step}%`,*/}
+			{/*						// width: `${step}%`,*/}
+			{/*						// height: `${step}%`,*/}
+			{/*					}}>*/}
+			{/*						<div className={"flex relative w-full aspect-square"} style={{*/}
+			{/*							left: `${seat.columnOffset}%`,*/}
+			{/*							top: `${seat.rowOffset}%`,*/}
+			{/*							backgroundColor: seat.columnIndex % 2 ? '#000' : '#fff',*/}
+			{/*						}}>*/}
+			{/*							<h1>{i}</h1>*/}
+			{/*						</div>*/}
+			{/*					</div>*/}
+			{/*				)*/}
+			{/*			})*/}
+			{/*		}*/}
+			{/*	</div>*/}
+			{/*</div>*/}
 		</>
 	)
 }

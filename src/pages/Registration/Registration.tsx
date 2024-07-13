@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { registerUserUsingPost } from "../../client";
+import { registerUser } from "../../client";
 import { useNavigate } from "react-router-dom";
 
 export function RegistrationPage() {
@@ -16,7 +16,7 @@ export function RegistrationPage() {
 	}
 
 	const registerNewUser = () => {
-		registerUserUsingPost({
+		registerUser({
 			registerRequest: {
 				email: email,
 				username: login,

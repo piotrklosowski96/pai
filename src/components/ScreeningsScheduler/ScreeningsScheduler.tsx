@@ -9,10 +9,11 @@ import withDragAndDrop, {
 import { useLoaderData } from "react-router-dom";
 import {
 	AddScreeningRequestTest,
-	addScreeningUsingPost,
-	getMoviesUsingGet,
-	getScreeningsUsingGet,
-	getScreensUsingGet, updateScreeningUsingPatch
+	addScreening,
+	getMovies,
+	getScreenings,
+	getScreens,
+	updateScreening
 } from "../../client";
 import { Screening } from "./Screening.tsx";
 import { IScreening } from "../../models/screening.ts";
@@ -22,7 +23,7 @@ import { IMovie } from "../../models/movie.ts";
 const DragAndDropCalendar = withDragAndDrop(Calendar<IScreening, IScreen>)
 
 export const screeningsSchedulerLoader = async ({params}) => {
-	const screenings = (await getScreeningsUsingGet({cinemaId: params.cinemaId})).map(s => {
+	const screenings = (await getScreenings({cinemaId: params.cinemaId})).map(s => {
 		return {
 			...s,
 			screeningStart: new Date(s.screeningStart! * 1000),
@@ -33,8 +34,8 @@ export const screeningsSchedulerLoader = async ({params}) => {
 	return {
 		cinemaId: params.cinemaId,
 		screenings: screenings,
-		screens: await getScreensUsingGet({cinemaId: params.cinemaId}),
-		availableMovies: await getMoviesUsingGet(),
+		screens: await getScreens({cinemaId: params.cinemaId}),
+		availableMovies: await getMovies(),
 	}
 }
 
@@ -69,10 +70,10 @@ export function ScreeningsScheduler({localizer}: IScreeningsSchedulerProps) {
 				return screening.screeningId !== args.event.screeningId
 			})
 
-			updateScreeningUsingPatch({
+			updateScreening({
 				cinemaId: cinemaId,
 				screeningId: args.event.screeningId,
-				body: {
+				requestBody: {
 					screenId: args.resourceId,
 					startDate: args.start,
 				}
@@ -126,9 +127,9 @@ export function ScreeningsScheduler({localizer}: IScreeningsSchedulerProps) {
 			trailerSource: draggedScreening.trailerSource,
 		}
 		console.log("screening.screeningStart: ", screening.screeningStart);
-		addScreeningUsingPost({
+		addScreening({
 			cinemaId: cinemaId,
-			body: {
+			requestBody: {
 				movieId: screening.movieId,
 				movieSoundType: 'LECTOR',
 				movieType: 'D2',

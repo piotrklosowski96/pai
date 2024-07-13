@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { getMoviesUsingGet } from "../../client";
+import { getMovies } from "../../client";
 import { useLoaderData } from "react-router-dom";
 
 interface IMainPageMovie {
@@ -9,7 +9,7 @@ interface IMainPageMovie {
 }
 
 export const mainLoader = async () => {
-	const movies = await getMoviesUsingGet()
+	const movies = await getMovies()
 
 	return movies.map((response) => {
 		return {
