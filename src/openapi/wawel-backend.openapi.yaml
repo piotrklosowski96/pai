@@ -1,0 +1,336 @@
+swagger: "2.0"
+info:
+  description: "Backend for \"Wawel\" cinemas"
+  version: "1.0.0"
+  title: "Wawel backend"
+  contact:
+    email: "piotr.klosowski@student.uj.edu.pl"
+host: "localhost:8080"
+basePath: "/api"
+tags:
+  - name: auth
+    description: Endpoints related to authentication and authorization of users
+  - name: oauth2
+    description: Endpoints related to authentication and authorization of users
+schemes:
+  - http
+paths:
+  /oauth2/v1/authorize/{identityProviderId}:
+    get:
+      tags:
+        - oauth2
+      operationId: authenticateUsingExternalIdentityProvider
+      summary: ""
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - in: path
+          name: identityProviderId
+          required: true
+          type: string
+          maxLength: 255
+        - in: query
+          name: response_type
+          required: true
+          type: string
+        - in: query
+          name: client_id
+          required: true
+          type: string
+        - in: query
+          name: redirect_uri
+          required: true
+          type: string
+        - in: query
+          name: scope
+          required: false
+          type: string
+        - in: query
+          name: state
+          required: true
+          type: string
+          maxLength: 255
+      responses:
+        200:
+          description: ""
+        302:
+          description: ""
+          headers:
+            Location:
+              type: string
+        500:
+          description: ""
+          schema:
+            type: object
+            properties:
+              reason:
+                type: string
+  /oauth2/v1/callback:
+    get:
+      tags:
+        - oauth2
+      operationId: authenticateUsingExternalIdentityProviderCallback
+      summary: ""
+      parameters:
+        - in: query
+          name: code
+          required: true
+          type: string
+          maxLength: 4095
+        - in: query
+          name: state
+          required: true
+          type: string
+          maxLength: 255
+      responses:
+        200:
+          description: ""
+          schema:
+            $ref: "#/definitions/TokenResponse"
+        302:
+          description: ""
+          headers:
+            Location:
+              type: string
+          schema:
+            $ref: "#/definitions/TokenResponse"
+        500:
+          description: ""
+          schema:
+            type: object
+            properties:
+              reason:
+                type: string
+  /oauth2/v1/token:
+    post:
+      tags:
+        - oauth2
+      operationId: OAuth2Token
+      summary: ""
+      produces:
+        - application/json
+      parameters:
+        - in: header
+          name: Authorization
+          required: false
+          type: string
+        - in: query
+          name: client_id
+          required: true
+          type: string
+        - in: query
+          name: client_secret
+          required: true
+          type: string
+        - in: query
+          name: code
+          required: true
+          type: string
+        - in: query
+          name: grant_type
+          required: true
+          type: string
+          enum:
+            - authorization_code
+            - password
+        - in: query
+          name: redirect_uri
+          required: false
+          type: string
+      responses:
+        200:
+          description: Successfully authorized
+          headers:
+            Cache-Control:
+              type: string
+            Pragma:
+              type: string
+          schema:
+            $ref: "#/definitions/TokenResponse"
+        500:
+          description: Internal server error
+          schema:
+            type: object
+            properties:
+              reason:
+                type: string
+  "/v1/auth/login":
+    post:
+      tags:
+        - auth
+      operationId: login
+      summary: ""
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: "#/definitions/LoginRequest"
+      responses:
+        200:
+          description: Successfully authorized
+          schema:
+            $ref: "#/definitions/TokenResponse"
+        401:
+          description: Authorization failed
+        404:
+          description: User does not exist
+        500:
+          description: Internal server error
+          schema:
+            type: object
+            properties:
+              reason:
+                type: string
+  "/v1/auth/register":
+    post:
+      tags:
+        - auth
+      operationId: register
+      summary: ""
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: "#/definitions/RegisterNewUserRequest"
+      responses:
+        200:
+          description: Successfully created new user
+        409:
+          description: User with provided information already exists
+        500:
+          description: Internal server error
+          schema:
+            type: object
+            properties:
+              reason:
+                type: string
+  "/v1/auth/register/complete":
+    post:
+      tags:
+        - auth
+      operationId: completeRegistration
+      summary: ""
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: "#/definitions/CompleteNewUserRegistrationRequest"
+        - in: query
+          name: registration_code
+          required: true
+          type: string
+          maxLength: 255
+      responses:
+        200:
+          description: User successfully registered
+        404:
+          description: User for provided registration code not found
+        410:
+          description: Registration code for requested user has expired and is no longer available
+        500:
+          description: Internal server error
+          schema:
+            type: object
+            properties:
+              reason:
+                type: string
+definitions:
+  LoginRequest:
+    type: object
+    required:
+      - username
+      - password
+    properties:
+      username:
+        type: string
+        maxLength: 255
+      password:
+        type: string
+        maxLength: 255
+  CompleteNewUserRegistrationRequest:
+    type: object
+    required:
+      - username
+      - password
+    properties:
+      username:
+        type: string
+        maxLength: 255
+      password:
+        type: string
+        maxLength: 255
+  RegisterNewUserRequest:
+    type: object
+    required:
+      - username
+      - password
+      - email
+      - firstName
+      - lastName
+    properties:
+      username:
+        type: string
+        maxLength: 255
+      password:
+        type: string
+        maxLength: 255
+      email:
+        type: string
+        maxLength: 255
+        format: email
+      firstName:
+        type: string
+        maxLength: 255
+      lastName:
+        type: string
+        maxLength: 255
+  TokenResponse:
+    type: object
+    required:
+      - accessToken
+      - expiresAt
+    properties:
+      accessToken:
+        type: string
+      expiresAt:
+        type: string
+        format: date-time
+  UserResponse:
+    type: object
+    required:
+      - userId
+      - username
+      - email
+      - firstName
+      - lastName
+    properties:
+      userId:
+        type: string
+        format: uuid4
+      username:
+        type: string
+        maxLength: 255
+      email:
+        type: string
+        maxLength: 255
+      firstName:
+        type: string
+        maxLength: 255
+      lastName:
+        type: string
+        maxLength: 255

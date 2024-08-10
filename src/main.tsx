@@ -13,9 +13,9 @@ import { ContactPage } from "./pages/Contact/Contact.tsx";
 import { LoginPage } from "./pages/Login/Login.tsx";
 import { RegistrationPage } from "./pages/Registration/Registration.tsx";
 import {
-	Main,
-	mainLoader,
-} from "./pages/Main/Main.tsx";
+	Home,
+	homeLoader,
+} from "./pages/Main/Home.tsx";
 import {
   AdministrationLayoutWrapper,
   cinemasLoader,
@@ -41,19 +41,25 @@ import {
 import { momentLocalizer } from "react-big-calendar";
 import moment from 'moment'
 import { OpenAPI } from "./client";
+import { OpenAPI as OpenAPIv2 } from "./clientv2"
+import { FinishRegistrationPage } from "./pages/FinishRegistration/FinishRegistration.tsx";
+import { CallbackPage } from "./pages/Callback/Callback.tsx";
 
 const localizer = momentLocalizer(moment)
 
 const router = createBrowserRouter([
 	{
-		path: "/",
 		element: <Root/>,
 		errorElement: <ErrorPage/>,
 		children: [
 			{
 				path: "/",
-				element: <Main/>,
-				loader: mainLoader,
+				element: <Home/>,
+				loader: homeLoader,
+			},
+			{
+				path: "/callback",
+				element: <CallbackPage/>,
 			},
 			{
 				path: "/seats",
@@ -107,6 +113,10 @@ const router = createBrowserRouter([
 			{
 				path: "/rejestracja",
 				element: <RegistrationPage/>
+			},
+			{
+				path: "/rejestracja/dokoncz",
+				element: <FinishRegistrationPage/>
 			}
 		]
 	}
@@ -119,6 +129,28 @@ OpenAPI.interceptors.request.use(config => {
 
 	return config;
 })
+
+OpenAPIv2.BASE = "http://localhost:8080/api"
+OpenAPIv2.interceptors.request.use(config => {
+	const token = localStorage.getItem('token');
+	config.headers!.Authorization =  token ? `Bearer ${token}` : '';
+	config.maxRedirects = 30
+
+	return config;
+})
+
+// OpenAPIv2.interceptors.response.use(response => {
+// 	console.log(response);
+// 	switch (response.status) {
+// 		case 301:
+// 		case 302:
+// 		case 307:
+// 		case 308:
+// 			window.location.href = response.request.responseURL;
+// 	}
+//
+// 	return response
+// })
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
 	<React.StrictMode>

@@ -62,150 +62,6 @@
         }
       }
     },
-    "/cinemas/{cinemaId}/screenings": {
-      "get": {
-        "tags": [
-          "cinemas-controller"
-        ],
-        "summary": "Get screenings by cinema ID",
-        "operationId": "getScreenings",
-        "parameters": [
-          {
-            "name": "cinemaId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          },
-          {
-            "name": "screeningDate",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "format": "date"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/GetScreeningResponse"
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "cinemas-controller"
-        ],
-        "summary": "Add new screening",
-        "operationId": "addScreening",
-        "parameters": [
-          {
-            "name": "cinemaId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddScreeningRequestTest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetScreeningResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/auth/register": {
-      "post": {
-        "tags": [
-          "authentication-controller"
-        ],
-        "operationId": "registerUser",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RegisterRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/User"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/auth/login": {
-      "post": {
-        "tags": [
-          "authentication-controller"
-        ],
-        "operationId": "authenticateUser",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/LoginRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/LoginResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/movies/{movieId}": {
       "get": {
         "tags": [
@@ -291,6 +147,152 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/GeneralMovieResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/api/auth/register": {
+      "post": {
+        "tags": [
+          "authentication-controller"
+        ],
+        "operationId": "registerUser",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/login": {
+      "post": {
+        "tags": [
+          "authentication-controller"
+        ],
+        "operationId": "authenticateUser",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/cinemas/{cinemaId}/screenings": {
+      "get": {
+        "tags": [
+          "cinemas-controller"
+        ],
+        "summary": "Get screenings by cinema ID",
+        "operationId": "getScreenings",
+        "parameters": [
+          {
+            "name": "cinemaId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "screeningDate",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GetScreeningResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "cinemas-controller"
+        ],
+        "summary": "Add new screening",
+        "operationId": "addScreening",
+        "parameters": [
+          {
+            "name": "cinemaId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddScreeningRequestTest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetScreeningResponse"
                 }
               }
             }
@@ -411,6 +413,98 @@
         }
       }
     },
+    "/cinemas": {
+      "get": {
+        "tags": [
+          "cinemas-controller"
+        ],
+        "summary": "Get cinemas",
+        "operationId": "getCinemas",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GetCinemasResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cinemas/{cinemaId}": {
+      "get": {
+        "tags": [
+          "cinemas-controller"
+        ],
+        "summary": "Get cinema by ID",
+        "operationId": "getCinema",
+        "parameters": [
+          {
+            "name": "cinemaId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCinemasResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cinemas/{cinemaId}/screens": {
+      "get": {
+        "tags": [
+          "cinemas-controller"
+        ],
+        "summary": "Get cinema screens",
+        "operationId": "getScreens",
+        "parameters": [
+          {
+            "name": "cinemaId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GetScreenResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
     "/users": {
       "get": {
         "tags": [
@@ -523,97 +617,6 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/GetSeatResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/cinemas": {
-      "get": {
-        "tags": [
-          "cinemas-controller"
-        ],
-        "summary": "Get cinemas",
-        "operationId": "getCinemas",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/GetCinemasResponse"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/cinemas/{cinemaId}": {
-      "get": {
-        "tags": [
-          "cinemas-controller"
-        ],
-        "summary": "Get cinema by ID",
-        "operationId": "getCinema",
-        "parameters": [
-          {
-            "name": "cinemaId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetCinemasResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/cinemas/{cinemaId}/screens": {
-      "get": {
-        "tags": [
-          "cinemas-controller"
-        ],
-        "summary": "Get cinema screens",
-        "operationId": "getScreens",
-        "parameters": [
-          {
-            "name": "cinemaId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/GetScreenResponse"
-                  }
                 }
               }
             }

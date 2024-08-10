@@ -8,7 +8,7 @@ interface IMainPageMovie {
 	mainPageImageSource: string
 }
 
-export const mainLoader = async () => {
+export const homeLoader = async () => {
 	const movies = await getMovies()
 
 	return movies.map((response) => {
@@ -20,7 +20,7 @@ export const mainLoader = async () => {
 	})
 }
 
-export function Main() {
+export function Home() {
 	const movies = useLoaderData() as Array<IMainPageMovie>
 
 	const [slide, setSlide] = useState(movies[0])
