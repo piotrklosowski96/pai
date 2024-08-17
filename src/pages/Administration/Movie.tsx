@@ -1,4 +1,4 @@
-import { IMovie } from "../../models/movie.ts";
+import { IMovie } from "../../models/IMovie.ts";
 import { Link } from "react-router-dom";
 import { MovieStatus } from "../../models/moveStatus.ts";
 

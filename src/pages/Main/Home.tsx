@@ -1,6 +1,6 @@
-import { useState } from "react";
-import { getMovies } from "../../client";
-import { useLoaderData } from "react-router-dom";
+import {useState} from "react";
+import {getMovies} from "../../client";
+import {useLoaderData} from "react-router-dom";
 
 interface IMainPageMovie {
 	title: string
@@ -9,13 +9,16 @@ interface IMainPageMovie {
 }
 
 export const homeLoader = async () => {
-	const movies = await getMovies()
+	const moviesResponse = await getMovies()
+	if (!moviesResponse?.movies) {
+		return []
+	}
 
-	return movies.map((response) => {
+	return moviesResponse.movies.map((m) => {
 		return {
-			title: response.title,
-			description: response.description,
-			mainPageImageSource: response.mainPageImageSource,
+			title: m.title,
+			description: m.description,
+			mainPageImageSource: m.mainPageImageURL,
 		} as IMainPageMovie
 	})
 }

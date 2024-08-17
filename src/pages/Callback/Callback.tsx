@@ -1,6 +1,6 @@
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { oauth2Token } from "../../clientv2";
+import { oauth2Token } from "../../client";
 
 export function CallbackPage() {
 	const [ searchParams] = useSearchParams()

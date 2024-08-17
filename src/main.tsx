@@ -41,7 +41,6 @@ import {
 import { momentLocalizer } from "react-big-calendar";
 import moment from 'moment'
 import { OpenAPI } from "./client";
-import { OpenAPI as OpenAPIv2 } from "./clientv2"
 import { FinishRegistrationPage } from "./pages/FinishRegistration/FinishRegistration.tsx";
 import { CallbackPage } from "./pages/Callback/Callback.tsx";
 
@@ -122,35 +121,13 @@ const router = createBrowserRouter([
 	}
 ])
 
-OpenAPI.BASE = "http://localhost:8083"
+OpenAPI.BASE = "http://localhost:8080/api"
 OpenAPI.interceptors.request.use(config => {
 	const token = localStorage.getItem('token');
 	config.headers!.Authorization =  token ? `Bearer ${token}` : '';
 
 	return config;
 })
-
-OpenAPIv2.BASE = "http://localhost:8080/api"
-OpenAPIv2.interceptors.request.use(config => {
-	const token = localStorage.getItem('token');
-	config.headers!.Authorization =  token ? `Bearer ${token}` : '';
-	config.maxRedirects = 30
-
-	return config;
-})
-
-// OpenAPIv2.interceptors.response.use(response => {
-// 	console.log(response);
-// 	switch (response.status) {
-// 		case 301:
-// 		case 302:
-// 		case 307:
-// 		case 308:
-// 			window.location.href = response.request.responseURL;
-// 	}
-//
-// 	return response
-// })
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
 	<React.StrictMode>

@@ -18,7 +18,7 @@ export function AdministrationLayoutWrapper() {
 						Filmy
 					</Link>
 					{
-						cinemas.map((c) => (
+						cinemas.cinemas.map((c) => (
 							<>
 								<Link
 									key={`screenings/${c.id}`}

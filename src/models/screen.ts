@@ -1,4 +1,4 @@
 export interface IScreen {
-	screenId: number
+	screenId: string
 	screenName: string
 }

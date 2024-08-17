@@ -5,7 +5,7 @@ import {
 } from "react";
 import { useLocalStorage } from "../hooks/useLocalStorage.ts";
 import { useNavigate } from "react-router-dom";
-import { authenticateUser, LoginResponse } from "../client";
+import { login as authenticateUser, LoginResponse } from "../client";
 import { jwtDecode, JwtPayload } from "jwt-decode";
 import { IUser } from "./User.ts";
 
@@ -22,7 +22,9 @@ export const AuthenticationContext = createContext<IAuthenticationContext>({
 });
 
 type PaiJWT = JwtPayload & {
-	roles: string[];
+	"https://wawel.pl": {
+		roles: string[];
+	}
 }
 
 type AuthenticationProviderProps = {
@@ -42,28 +44,29 @@ export const AuthenticationProvider = ({children}: AuthenticationProviderProps) 
 
 			const jwtDecodedUser = jwtDecode<PaiJWT>(tokenValue)
 			setUser({
-				roles: jwtDecodedUser.roles
+				roles: jwtDecodedUser["https://wawel.pl"]?.roles
 			} as IUser);
 		}
 	}, [])
 
 	const login = async (username: string, password: string) => {
 		const response = await authenticateUser({
-			requestBody: {
+			body: {
 				username: username,
 				password: password,
 			}
 		}) as LoginResponse
 
-		if (!response.token) {
+		if (!response.access_token) {
 			throw new Error("Token not found")
 		}
-		const jwtDecodedUser = jwtDecode<PaiJWT>(response.token)
+		const jwtDecodedUser = jwtDecode<PaiJWT>(response.access_token)
+		console.log(jwtDecodedUser)
 
-		setItem("token", response.token)
-		setToken(response.token);
+		setItem("token", response.access_token)
+		setToken(response.access_token);
 		setUser({
-			roles: jwtDecodedUser.roles
+			roles: jwtDecodedUser["https://wawel.pl"]?.roles
 		} as IUser)
 		navigate("/");
 	};

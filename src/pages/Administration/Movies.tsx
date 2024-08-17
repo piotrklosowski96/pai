@@ -5,7 +5,7 @@ import {
 	getMovies,
 	GetMoviesResponse
 } from "../../client";
-import { IMovie } from "../../models/movie.ts";
+import { IMovie } from "../../models/IMovie.ts";
 import { useState } from "react";
 
 export const moviesLoader = async (): Promise<GetMoviesResponse> => {
@@ -43,7 +43,7 @@ export function Movies() {
 
 				</div>
 				{
-					movies.map((movie) => (
+					movies.movies.map((movie) => (
 						<Movie
 							id={movie.id}
 							title={movie.title}

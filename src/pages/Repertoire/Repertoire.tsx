@@ -10,7 +10,7 @@ import moment from 'moment'
 import 'moment/dist/locale/pl.js'
 
 export function RepertoirePage() {
-	const cinemas = useLoaderData() as ICinema[]
+	const cinemas = useLoaderData()
 	moment.locale('pl');
 
 	const [date, setDate] = useState(new Date());
@@ -66,7 +66,7 @@ export function RepertoirePage() {
 								className={"w-full rounded border-2"}
 								defaultValue={undefined}
 								onChange={async (e) => {
-									const selectedCinema = cinemas.find((c) => {
+									const selectedCinema = cinemas.cinemas.find((c) => {
 										return c.city === e.target.value
 									});
 									if (selectedCinema) {
@@ -76,7 +76,7 @@ export function RepertoirePage() {
 							>
 								<option></option>
 								{
-									cinemas.map((cinema) => (
+									cinemas.cinemas.map((cinema) => (
 										<option value={cinema.city}>
 											{cinema.city}
 										</option>

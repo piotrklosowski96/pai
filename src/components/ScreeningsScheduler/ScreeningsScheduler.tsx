@@ -8,34 +8,58 @@ import withDragAndDrop, {
 } from 'react-big-calendar/lib/addons/dragAndDrop'
 import { useLoaderData } from "react-router-dom";
 import {
-	AddScreeningRequestTest,
-	addScreening,
 	getMovies,
+	addScreening,
 	getScreenings,
-	getScreens,
-	updateScreening
+	updateScreening,
+	getScreens
 } from "../../client";
-import { Screening } from "./Screening.tsx";
+import { Movie } from "./Movie.tsx";
 import { IScreening } from "../../models/screening.ts";
 import { IScreen } from "../../models/screen.ts";
-import { IMovie } from "../../models/movie.ts";
+import { IMovie } from "../../models/IMovie.ts";
 
 const DragAndDropCalendar = withDragAndDrop(Calendar<IScreening, IScreen>)
 
-export const screeningsSchedulerLoader = async ({params}) => {
-	const screenings = (await getScreenings({cinemaId: params.cinemaId})).map(s => {
-		return {
-			...s,
-			screeningStart: new Date(s.screeningStart! * 1000),
-			screeningEnd: new Date(s.screeningEnd! * 1000),
-		} as unknown as IScreening;
-	})
+interface ISchedulerLoaderResult {
+	screenings: IScreening[]
+	screens: IScreen[]
+	movies: IMovie[]
+}
+
+export const screeningsSchedulerLoader = async ({params}): Promise<ISchedulerLoaderResult> => {
+	const screeningsResponse = getScreenings({cinemaId: params.cinemaId});
+	const screensResponse = getScreens({cinemaId: params.cinemaId});
+	const moviesResponse = getMovies();
 
 	return {
-		cinemaId: params.cinemaId,
-		screenings: screenings,
-		screens: await getScreens({cinemaId: params.cinemaId}),
-		availableMovies: await getMovies(),
+		screenings: (await screeningsResponse)?.screenings?.map(s => {
+			return {
+				...s,
+				screeningStart: new Date(s.screeningStart!),
+				screeningEnd: new Date(s.screeningEnd!),
+			} as IScreening;
+		}) || [],
+		screens: (await screensResponse).screens?.map(s => {
+			return {
+				screenId: s.screenId,
+				screenName: s.screenName,
+			} as IScreen
+		}) || [],
+		movies: (await moviesResponse).movies?.map(m => {
+			return {
+				id: m.id,
+				title: m.title,
+				genre: m.genre,
+				ageRestriction: m.ageRestriction,
+				description: m.description,
+				movieDuration: m.movieDuration,
+				status: m.status,
+				posterImageURL: m.posterImageURL,
+				mainPageImageURL: m.mainPageImageURL,
+				trailerURL: m.trailerURL,
+			} as IMovie
+		}) || [],
 	}
 }
 
@@ -44,48 +68,53 @@ export interface IScreeningsSchedulerProps {
 }
 
 export function ScreeningsScheduler({localizer}: IScreeningsSchedulerProps) {
-	const schedulerData = useLoaderData()
+	const schedulerData = useLoaderData() as ISchedulerLoaderResult
 
-	const [cinemaId, setCinemaId] = useState(schedulerData.cinemaId);
 	const [scheduledScreenings, setScheduledScreenings] = useState<IScreening[]>(schedulerData.screenings)
 	const [screens, setScreens] = useState(schedulerData.screens)
-	const [movies, setMovies] = useState<IMovie[]>(schedulerData.availableMovies)
-	const [draggedScreening, setDraggedScreening] = useState<IScreening | null>(null)
+	const [movies, setMovies] = useState<IMovie[]>(schedulerData.movies)
+	const [draggedScreening, setDraggedScreening] = useState<IScreening>()
 
 	useEffect(() => {
-		setCinemaId(schedulerData.cinemaId)
 		setScheduledScreenings(schedulerData.screenings)
 		setScreens(schedulerData.screens)
-		setMovies(schedulerData.availableMovies)
+		setMovies(schedulerData.movies)
 	}, [schedulerData]);
 
-	const handleDragStart = useCallback((screening: IScreening) => setDraggedScreening(screening), [])
-	const dragFromOutsideItem = useCallback(() => draggedScreening, [draggedScreening])
+	const handleDragStart = useCallback((screening: IScreening) => {
+		setDraggedScreening(screening)
+	}, [])
 	const moveEvent = useCallback((args: EventInteractionArgs<IScreening>) => {
-		setScheduledScreenings((screenings: IScreening[]) => {
-			const existing = screenings.find((screening: IScreening) => {
+		setScheduledScreenings((screenings: IScreening[]): IScreening[] => {
+			const screeningToUpdate = screenings.find((screening: IScreening) => {
 				return screening.screeningId === args.event.screeningId
-			}) ?? {}
-			const filtered = screenings.filter((screening: IScreening) => {
+			});
+			if (screeningToUpdate === null || screeningToUpdate === undefined) {
+				return []
+			}
+
+			const restOfScreenings = screenings.filter((screening: IScreening) => {
 				return screening.screeningId !== args.event.screeningId
 			})
 
 			updateScreening({
-				cinemaId: cinemaId,
 				screeningId: args.event.screeningId,
-				requestBody: {
-					screenId: args.resourceId,
-					startDate: args.start,
-				}
-			})
+				body: {
+					screenId: args.resourceId as string,
+					screeningStart: new Date(args.start).toISOString(),
+				},
+			});
 
 			return [
-				...filtered,
+				...restOfScreenings,
 				{
-					...existing,
+					...screeningToUpdate,
 					screeningStart: args.start as Date,
 					screeningEnd: args.end as Date,
-					screenId: args.resourceId,
+					screen: {
+						...(screeningToUpdate.screen),
+						screenId: args.resourceId as string,
+					},
 				}
 			]
 		})
@@ -100,46 +129,33 @@ export function ScreeningsScheduler({localizer}: IScreeningsSchedulerProps) {
 			return
 		}
 
-		setDraggedScreening(null)
-		let screening = {
-			title: draggedScreening.title,
-			screeningStart: args.start,
-			screeningEnd: localizer.add(
-				args.start as Date,
-				draggedScreening.adsDuration +
-				draggedScreening.movieDuration +
-				draggedScreening.cleaningServiceDuration,
-				'minutes'
-			),
-			screenId: args.resource,
-			adsDuration: draggedScreening.adsDuration,
-			movieDuration: draggedScreening.movieDuration,
-			cleaningServiceDuration: draggedScreening.cleaningServiceDuration,
-			averageRating: draggedScreening.averageRating,
-			description: draggedScreening.description,
-			type: draggedScreening.type,
-			genre: draggedScreening.genre,
-			movieId: draggedScreening.movieId,
-			minAge: draggedScreening.minAge,
-			status: draggedScreening.status,
-			bigImageSource: draggedScreening.bigImageSource,
-			posterSource: draggedScreening.posterSource,
-			trailerSource: draggedScreening.trailerSource,
-		}
-		console.log("screening.screeningStart: ", screening.screeningStart);
+		console.log("onDropFromOutside: ", args)
+
+		setDraggedScreening(undefined)
 		addScreening({
-			cinemaId: cinemaId,
-			requestBody: {
-				movieId: screening.movieId,
+			body: {
+				screenId: args.resource,
+				movieId: draggedScreening.movie.id,
+				screeningStart: new Date(args.start).toISOString(),
+				adsDuration: 30,
+				cleaningServiceDuration: 30,
 				movieSoundType: 'LECTOR',
 				movieType: 'D2',
-				screenId: args.resource,
-				startDate: screening.screeningStart,
-			} as AddScreeningRequestTest
+			}
 		}).then(response => {
-			screening.screeningId = response.screeningId;
+			newScreening({
+				screeningId: response.screeningId!,
+				screeningStart: new Date(response.screeningStart!),
+				screeningEnd: new Date(response.screeningEnd!),
+				adsDuration: response.adsDuration!,
+				cleaningServiceDuration: response.cleaningServiceDuration!,
+				movie: response.movie!,
+				screen: {
+					screenId: response.screen?.screenId!,
+					screenName: response.screen?.screenName!,
+				}
+			})
 		})
-		newScreening(screening)
 	}, [draggedScreening, setDraggedScreening, newScreening])
 
 	const {defaultDate, views} = useMemo(() => ({
@@ -149,10 +165,10 @@ export function ScreeningsScheduler({localizer}: IScreeningsSchedulerProps) {
 		},
 	}), [])
 	const components = useMemo(() => ({
-		event: ({event, title}: { event: IMovie, title: string }) => {
-			const totalTime = event.adsDuration + event.movieDuration + event.cleaningServiceDuration
+		event: ({event, title}: { event: IScreening, title: string }) => {
+			const totalTime = event.adsDuration + event.movie?.movieDuration! + event.cleaningServiceDuration
 			const adsDurationHeight = 100 * event.adsDuration / totalTime
-			const movieDurationHeight = 100 * event.movieDuration / totalTime
+			const movieDurationHeight = 100 * event.movie?.movieDuration! / totalTime
 			const cleaningServiceDurationHeight = 100 * event.cleaningServiceDuration / totalTime
 
 			return (
@@ -218,32 +234,24 @@ export function ScreeningsScheduler({localizer}: IScreeningsSchedulerProps) {
 						defaultView={Views.DAY}
 						views={views}
 						onEventDrop={moveEvent}
-						dragFromOutsideItem={dragFromOutsideItem}
 						onDropFromOutside={onDropFromOutside}
-
-
 						events={scheduledScreenings}
-						resources={screens}
 						startAccessor={(screening: IScreening) => screening.screeningStart}
 						endAccessor={(screening: IScreening) => screening.screeningEnd}
-						resourceAccessor={(screening: IScreening) => screening.screenId}
+						resources={screens}
+						resourceAccessor={(screening: IScreening) => screening.screen.screenId}
 						resourceIdAccessor={(screen: IScreen) => screen.screenId}
 						resourceTitleAccessor={(screen: IScreen) => screen.screenName}
-						step={15}
+						step={30}
 					/>
 				</div>
 				<div>
 					{
-						movies.map((movie: IScreening) => (
-							<Screening
+						movies.map((movie: IMovie) => (
+							<Movie
 								key={movie.id}
-								movieId={movie.id}
-								title={movie.title}
-								format={movie.type}
-								adsDuration={movie.adsDuration}
-								movieDuration={movie.movieDuration}
-								cleaningServiceDuration={movie.cleaningServiceDuration}
-								handleDragStart={handleDragStart}
+								movie={movie}
+								onDragStartHandler={handleDragStart}
 							/>
 						))
 					}

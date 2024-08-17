@@ -1,9 +1,12 @@
-import { IMovie } from "./movie.ts";
+import { IMovie } from "./IMovie.ts";
+import { IScreen } from "./screen.ts";
 
-export type IScreening = IMovie & {
+export interface IScreening {
 	screeningId: string
 	screeningStart: Date
 	screeningEnd: Date
-	screenId: number
-	resourceId: number
+	adsDuration: number
+	cleaningServiceDuration: number
+	movie: IMovie
+	screen: IScreen
 }

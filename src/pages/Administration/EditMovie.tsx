@@ -5,10 +5,10 @@ import {
 	getMovie,
 	updateMovie
 } from "../../client";
-import { IMovie } from "../../models/movie.ts";
+import { IMovie } from "../../models/IMovie.ts";
 import { MovieStatus } from "../../models/moveStatus.ts";
 
-export const editMovieLoader = async ({params}) => {
+export const editMovieLoader = async ({params} : {params: { movieId: string }}) => {
 	return getMovie({movieId: params.movieId});
 }
 
@@ -61,13 +61,11 @@ export function EditMovie() {
 	const [movieId] = useState(editedMovie.id);
 	const [title, setTitle] = useState(editedMovie.title)
 	const [genre, setGenre] = useState(editedMovie.genre)
-	const [ageRestriction, setAgeRestriction] = useState(editedMovie.minAge)
-	const [adsDuration, setAdsDuration] = useState(editedMovie.adsDuration)
+	const [ageRestriction, setAgeRestriction] = useState(editedMovie.ageRestriction)
 	const [movieDuration, setMovieDuration] = useState(editedMovie.movieDuration)
-	const [cleaningServiceDuration, setCleaningServiceDuration] = useState(editedMovie.cleaningServiceDuration)
 	const [description, setDescription] = useState(editedMovie.description)
-	const [posterImage, setPosterImage] = useState(editedMovie.posterImageSource);
-	const [carouselImage, setCarouselImage] = useState(editedMovie.mainPageImageSource);
+	const [posterImage, setPosterImage] = useState(editedMovie.posterImageURL);
+	const [carouselImage, setCarouselImage] = useState(editedMovie.mainPageImageURL);
 
 	const onChangePicture = useCallback((e, imageHandler) => {
 		if (e.target.files[0]) {
@@ -82,43 +80,40 @@ export function EditMovie() {
 		if (movieId) {
 			updateMovie({
 				movieId: movieId,
-				requestBody: {
-					title,
-					genre,
-					minAge: ageRestriction,
-					adsDuration,
-					movieDuration,
-					cleaningServiceDuration,
-					description,
-					posterSource: posterImage,
-					bigImageSource: carouselImage,
+				body: {
+					title: title,
+					genre: genre,
+					ageRestriction: ageRestriction,
+					description: description,
+					movieDuration: movieDuration,
+					status: status,
+					posterImageURL: posterImage,
+					mainPageImageURL: carouselImage,
 				}
 			})
 		} else {
 			addMovie({
-				requestBody: {
-					title,
-					genre,
+				body: {
+					title: title,
+					description: description,
+					genre: genre,
 					minAge: ageRestriction,
-					adsDuration,
-					movieDuration,
-					cleaningServiceDuration,
-					description,
+					movieDuration: movieDuration,
 					posterSource: posterImage,
 					bigImageSource: carouselImage,
 				}
 			})
 		}
-	}, [movieId,
+	}, [
+		movieId,
 		title,
-		genre,
-		ageRestriction,
-		adsDuration,
-		movieDuration,
-		cleaningServiceDuration,
 		description,
+		genre,
+		status,
+		ageRestriction,
+		movieDuration,
 		posterImage,
-		carouselImage
+		carouselImage,
 	])
 
 	return (
@@ -266,7 +261,7 @@ export function EditMovie() {
 						</label>
 					</label>
 					{/*Czas trwania bloku reklamowego*/}
-					<label className={"block pb-2"}>
+					{/*<label className={"block pb-2"}>
 						<h1 className={"flex-none font-semibold"}>
 							Czas trwania bloku reklamowego:
 						</h1>
@@ -285,7 +280,7 @@ export function EditMovie() {
 								min.
 							</h1>
 						</div>
-					</label>
+					</label>*/}
 					{/*Czas trwania filmu*/}
 					<label className={"block pb-2"}>
 						<h1 className={"flex-none font-semibold"}>
@@ -308,7 +303,7 @@ export function EditMovie() {
 						</div>
 					</label>
 					{/*Czas sprzątania po seansie*/}
-					<label className={"block pb-2"}>
+					{/*<label className={"block pb-2"}>
 						<h1 className={"flex-none font-semibold"}>
 							Czas sprzątania po seansie:
 						</h1>
@@ -327,7 +322,7 @@ export function EditMovie() {
 								min.
 							</h1>
 						</div>
-					</label>
+					</label>*/}
 					{/*Opis*/}
 					<label className={"block pb-2"}>
 						<h1 className={"font-semibold"}>

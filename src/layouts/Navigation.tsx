@@ -45,7 +45,7 @@ export const Navigation = () => {
 						<div className="ml-4 flex items-center md:ml-6 space-x-4">
 							{
 								paths.map((p) => {
-									if (p.protected && !user?.roles.includes("administrator")) {
+									if (p.protected && !user?.roles?.includes("ADMIN")) {
 										return <></>
 									}
 

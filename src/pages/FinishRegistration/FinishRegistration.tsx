@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { completeRegistration, oauth2Token } from "../../clientv2";
+import { completeRegistration, oauth2Token } from "../../client";
 
 export function FinishRegistrationPage() {
 	const [login, setLogin] = useState<string>("")
