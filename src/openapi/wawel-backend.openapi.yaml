@@ -448,194 +448,6 @@ paths:
           description: Not found
         500:
           description: Internal server error
-  /cinemas/{cinemaId}/screenings:
-    get:
-      tags:
-        - cinemas
-      summary: Get screenings by cinema ID
-      operationId: getCinemaScreenings
-      parameters:
-        - in: path
-          name: cinemaId
-          required: true
-          type: string
-          format: uuid4
-        - name: screeningDate
-          in: query
-          required: false
-          type: string
-          format: date
-        - in: query
-          name: offset
-          required: false
-          type: integer
-          minimum: 0
-          default: 0
-        - in: query
-          name: limit
-          required: false
-          type: integer
-          minimum: 0
-          exclusiveMinimum: true
-          default: 100
-      responses:
-        200:
-          description: OK
-          schema:
-            allOf:
-              - $ref: "#/definitions/Pagination"
-              - type: object
-                properties:
-                  screenings:
-                    type: array
-                    items:
-                      $ref: "#/definitions/GetScreeningResponse"
-        404:
-          description: Not found
-        500:
-          description: Internal server error
-    post:
-      tags:
-        - cinemas
-      operationId: addCinemaScreening
-      summary: Add new screening
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - in: path
-          name: cinemaId
-          required: true
-          type: string
-          format: uuid4
-        - in: body
-          name: body
-          required: true
-          schema:
-            $ref: "#/definitions/AddScreeningRequest"
-      responses:
-        201:
-          description: Created new screening
-          schema:
-            $ref: "#/definitions/GetScreeningResponse"
-        404:
-          description: Not found
-        500:
-          description: Internal server error
-  /cinemas/{cinemaId}/screenings/{screeningId}:
-    get:
-      tags:
-        - cinemas
-      operationId: getScreeningById
-      summary: Get screening by ID
-      produces:
-        - application/json
-      parameters:
-        - in: path
-          name: cinemaId
-          required: true
-          type: string
-          format: uuid4
-        - in: path
-          name: screeningId
-          required: true
-          type: string
-          format: uuid4
-      responses:
-        200:
-          description: OK
-          schema:
-            $ref: "#/definitions/GetScreeningResponse"
-        404:
-          description: Not found
-        500:
-          description: Internal server error
-    delete:
-      tags:
-        - cinemas
-      operationId: deleteCinemaScreening
-      summary: Delete screening by ID
-      parameters:
-        - in: path
-          name: cinemaId
-          required: true
-          type: string
-          format: uuid4
-        - in: path
-          name: screeningId
-          required: true
-          type: string
-          format: uuid4
-      responses:
-        204:
-          description: No content
-        404:
-          description: Not found
-        500:
-          description: Internal server error
-    patch:
-      tags:
-        - cinemas
-      operationId: updateCinemaScreening
-      summary: Update screening by ID
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - in: path
-          name: cinemaId
-          required: true
-          type: string
-          format: uuid4
-        - in: path
-          name: screeningId
-          required: true
-          type: string
-          format: uuid4
-        - in: body
-          name: body
-          required: true
-          schema:
-            $ref: "#/definitions/PatchScreeningRequest"
-      responses:
-        200:
-          description: OK
-          schema:
-            $ref: '#/definitions/GetScreeningResponse'
-        500:
-          description: Internal server error
-  /cinemas/{cinemaId}/screens:
-    get:
-      tags:
-        - cinemas
-      summary: Get cinema screens
-      operationId: getCinemaScreens
-      parameters:
-        - name: cinemaId
-          in: path
-          required: true
-          type: string
-          format: uuid4
-        - in: query
-          name: name
-          required: false
-          type: string
-      responses:
-        200:
-          description: OK
-          schema:
-            allOf:
-              - $ref: "#/definitions/Pagination"
-              - type: object
-                properties:
-                  screens:
-                    type: array
-                    items:
-                      $ref: '#/definitions/GetScreenResponse'
-        500:
-          description: Internal server error
 
   /screens:
     post:
@@ -944,10 +756,10 @@ definitions:
   LoginRequest:
     type: object
     required:
-      - username
+      - email
       - password
     properties:
-      username:
+      email:
         type: string
         maxLength: 255
       password:
@@ -1246,6 +1058,8 @@ definitions:
       trailerSource:
         type: string
       description:
+        type: string
+      status:
         type: string
   GetMovieResponse:
     type: object

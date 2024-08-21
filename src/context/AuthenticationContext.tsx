@@ -49,10 +49,10 @@ export const AuthenticationProvider = ({children}: AuthenticationProviderProps) 
 		}
 	}, [])
 
-	const login = async (username: string, password: string) => {
+	const login = async (email: string, password: string) => {
 		const response = await authenticateUser({
 			body: {
-				username: username,
+				email: email,
 				password: password,
 			}
 		}) as LoginResponse

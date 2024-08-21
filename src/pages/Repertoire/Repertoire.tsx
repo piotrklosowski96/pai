@@ -23,12 +23,13 @@ export function RepertoirePage() {
 		}
 
 		getScreenings({
-			cinemaId: selectedCinema!.id,
+			cinemaId: selectedCinema.id,
+
 		}).then((response) => {
-			return response as unknown as IScreening[];
+			return response.screenings as unknown as IScreening[];
 		}).then((screenings) => {
 			return screenings.filter((s) => {
-				const screeningDate = new Date((s.screeningStart!) * 1000);
+				const screeningDate = new Date(s.screeningStart!)
 
 				return screeningDate.getFullYear() == date.getFullYear() &&
 					screeningDate.getMonth() == date.getMonth() &&
@@ -36,17 +37,18 @@ export function RepertoirePage() {
 			})
 		}).then((screenings) => {
 			return Object.values(screenings.reduce((previousValue: Record<string, IRepertoireEntry>, currentValue) => {
-				if (!previousValue[currentValue.movieId]) {
-					previousValue[currentValue.movieId] = {
+				if (!previousValue[currentValue.movie.id!]) {
+					previousValue[currentValue.movie.id!] = {
 						...currentValue,
 						screeningDates: []
 					};
 				}
-				previousValue[currentValue.movieId].screeningDates.push(currentValue.screeningStart);
+				previousValue[currentValue.movie.id!].screeningDates.push(currentValue.screeningStart);
 
 				return previousValue
 			}, {})).map((s) => s)
 		}).then((screenings) => {
+			console.log(screenings)
 			setRepertoire(screenings);
 		})
 	}, [selectedCinema, date]);

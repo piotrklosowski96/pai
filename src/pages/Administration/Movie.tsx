@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { MovieStatus } from "../../models/moveStatus.ts";
 
 export interface IMovieProps {
+	movie: IMovie
 	onArchive: () => void
 	onDelete: () => void
 }
@@ -24,25 +25,27 @@ const movieStatusToString = (movieStatus: MovieStatus) => {
 	}
 }
 
-export function Movie(props: (IMovie & IMovieProps)) {
+export function Movie(props: IMovieProps) {
+	const movie = props.movie
+
 	return (
 		<>
 			<div className={"flex gap-1 p-4 border-2"}>
-				<img className="w-2/12 md:rounded-none rounded-full" src={props.posterImageSource} alt="" width="384" height="512"/>
+				<img className="w-2/12 md:rounded-none rounded-full" src={movie.posterImageURL} alt="" width="384" height="512"/>
 				<div className={"w-5/12 flex flex-col justify-center p-4"}>
-					<h1 className="text-2xl font-semibold">{props.title}</h1>
-					<h1>Gatunek: {props.genre}</h1>
-					<h1>Wiek: {props.minAge}+</h1>
-					<h1>Czas trwania: {props.movieDuration} min.</h1>
-					<h1 className={"truncate ..."}>Opis: {props.description}</h1>
+					<h1 className="text-2xl font-semibold">{movie.title}</h1>
+					<h1>Gatunek: {movie.genre}</h1>
+					<h1>Wiek: {movie.ageRestriction}+</h1>
+					<h1>Czas trwania: {movie.movieDuration} min.</h1>
+					<h1 className={"truncate ..."}>Opis: {movie.description}</h1>
 				</div>
 				<div className={"w-2/12 flex flex-col justify-center p-4"}>
-					{movieStatusToString(props.status)}
+					{movieStatusToString(movie.status)}
 				</div>
 				<div className={"w-3/12 flex flex-col justify-center p-4"}>
 					<Link
 						className={"block bg-gray-900 text-white rounded-md w-full mt-2 mb-1 px-3 py-2 text-sm font-medium text-center"}
-						to={`${props.id}/edit`}>
+						to={`${movie.id}/edit`}>
 						Edytuj
 					</Link>
 					<button

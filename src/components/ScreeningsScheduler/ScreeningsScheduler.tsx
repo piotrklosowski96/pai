@@ -70,10 +70,11 @@ export interface IScreeningsSchedulerProps {
 export function ScreeningsScheduler({localizer}: IScreeningsSchedulerProps) {
 	const schedulerData = useLoaderData() as ISchedulerLoaderResult
 
-	const [scheduledScreenings, setScheduledScreenings] = useState<IScreening[]>(schedulerData.screenings)
-	const [screens, setScreens] = useState(schedulerData.screens)
-	const [movies, setMovies] = useState<IMovie[]>(schedulerData.movies)
-	const [draggedScreening, setDraggedScreening] = useState<IScreening>()
+	const [scheduledScreenings, setScheduledScreenings] = useState<IScreening[]>(schedulerData.screenings);
+	const [screens, setScreens] = useState(schedulerData.screens);
+	const [movies, setMovies] = useState<IMovie[]>(schedulerData.movies);
+	const [draggedScreening, setDraggedScreening] = useState<IScreening>();
+	const [draggedMovie, setDraggedMovie] = useState<IMovie>();
 
 	useEffect(() => {
 		setScheduledScreenings(schedulerData.screenings)
@@ -81,9 +82,11 @@ export function ScreeningsScheduler({localizer}: IScreeningsSchedulerProps) {
 		setMovies(schedulerData.movies)
 	}, [schedulerData]);
 
-	const handleDragStart = useCallback((screening: IScreening) => {
-		setDraggedScreening(screening)
+	const handleDragStart = useCallback((movie: IMovie) => {
+		console.log("handleDragStart", movie)
+		setDraggedMovie(movie)
 	}, [])
+
 	const moveEvent = useCallback((args: EventInteractionArgs<IScreening>) => {
 		setScheduledScreenings((screenings: IScreening[]): IScreening[] => {
 			const screeningToUpdate = screenings.find((screening: IScreening) => {
@@ -125,17 +128,17 @@ export function ScreeningsScheduler({localizer}: IScreeningsSchedulerProps) {
 		})
 	}, [setScheduledScreenings])
 	const onDropFromOutside = useCallback((args: DragFromOutsideItemArgs) => {
-		if (draggedScreening === undefined || draggedScreening === null) {
+		if (draggedMovie === undefined || draggedMovie === null) {
 			return
 		}
 
-		console.log("onDropFromOutside: ", args)
+		console.log(draggedMovie)
 
-		setDraggedScreening(undefined)
+		setDraggedMovie(undefined)
 		addScreening({
 			body: {
 				screenId: args.resource,
-				movieId: draggedScreening.movie.id,
+				movieId: draggedMovie.id,
 				screeningStart: new Date(args.start).toISOString(),
 				adsDuration: 30,
 				cleaningServiceDuration: 30,
@@ -151,12 +154,14 @@ export function ScreeningsScheduler({localizer}: IScreeningsSchedulerProps) {
 				cleaningServiceDuration: response.cleaningServiceDuration!,
 				movie: response.movie!,
 				screen: {
-					screenId: response.screen?.screenId!,
-					screenName: response.screen?.screenName!,
+					screenId: response.screen!.screenId!,
+					screenName: response.screen!.screenName!,
 				}
 			})
+		}).catch(error => {
+			console.log(error)
 		})
-	}, [draggedScreening, setDraggedScreening, newScreening])
+	}, [draggedMovie, newScreening])
 
 	const {defaultDate, views} = useMemo(() => ({
 		defaultDate: new Date(),
@@ -166,9 +171,9 @@ export function ScreeningsScheduler({localizer}: IScreeningsSchedulerProps) {
 	}), [])
 	const components = useMemo(() => ({
 		event: ({event, title}: { event: IScreening, title: string }) => {
-			const totalTime = event.adsDuration + event.movie?.movieDuration! + event.cleaningServiceDuration
+			const totalTime = event.adsDuration + event.movie!.movieDuration! + event.cleaningServiceDuration
 			const adsDurationHeight = 100 * event.adsDuration / totalTime
-			const movieDurationHeight = 100 * event.movie?.movieDuration! / totalTime
+			const movieDurationHeight = 100 * event.movie!.movieDuration! / totalTime
 			const cleaningServiceDurationHeight = 100 * event.cleaningServiceDuration / totalTime
 
 			return (
@@ -184,13 +189,14 @@ export function ScreeningsScheduler({localizer}: IScreeningsSchedulerProps) {
 						height: movieDurationHeight + "%",
 						backgroundColor: "rgb(217, 30, 77)",
 					}}>
-						{title}
+						{event.movie.title}
 					</p>
 					<p style={{
 						height: cleaningServiceDurationHeight + "%",
 						backgroundColor: "rgb(85, 85, 85)",
 						borderRadius: "0 0 4px 4px",
-					}}>Sprzątanie
+					}}>
+						Sprzątanie
 					</p>
 				</div>
 			)

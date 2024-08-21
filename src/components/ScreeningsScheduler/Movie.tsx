@@ -1,6 +1,6 @@
 import { IMovie } from "../../models/IMovie.ts";
 
-export function Movie({ movie, onDragStartHandler}: { movie: IMovie, onDragStartHandler: (e: any) => void }) {
+export function Movie({ movie, onDragStartHandler}: { movie: IMovie, onDragStartHandler: (movie: IMovie) => void }) {
 	return (
 		<>
 			<div className={"border-2"}

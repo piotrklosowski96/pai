@@ -45,18 +45,8 @@ export function Movies() {
 				{
 					movies.movies.map((movie) => (
 						<Movie
-							id={movie.id}
-							title={movie.title}
-							description={movie.description}
-							genre={movie.genre}
-							minAge={movie.minAge}
-							duration={movie.duration}
-							status={movie.status}
-							posterImageSource={movie.posterImageSource}
-							bigImageSource={movie.bigImageSource}
-							averageRating={movie.averageRating}
-							posterSource={movie.posterSource}
-							trailerSource={movie.trailerSource}
+							key={movie.id}
+							movie={movie}
 							onArchive={() => archiveMovie(movie.id)}
 							onDelete={() => deleteMovie(movie.id)}
 						/>
