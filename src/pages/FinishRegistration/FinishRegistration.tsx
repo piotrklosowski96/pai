@@ -1,15 +1,19 @@
 import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { completeRegistration, oauth2Token } from "../../client";
+import { ITokenResponse } from "../../context/AuthenticationContext.tsx";
+import { useAuthentication } from "../../hooks/useAuthentication.ts";
 
 export function FinishRegistrationPage() {
+	const { handleTokenResponse } = useAuthentication()
+
+	const [searchParams] = useSearchParams()
+	const navigate = useNavigate()
+
 	const [login, setLogin] = useState<string>("")
 	const [password, setPassword] = useState<string>("")
 	const [passwordConfirmation, setPasswordConfirmation] = useState<string>("")
 	const [error] = useState<string>("")
-
-	const [searchParams] = useSearchParams()
-	const navigate = useNavigate()
 
 	const passwordsMatching = (): boolean => {
 		return password === passwordConfirmation
@@ -32,7 +36,8 @@ export function FinishRegistrationPage() {
 				code: searchParams.get("code")!,
 				grantType: "authorization_code",
 				redirectUri: "http://localhost:5173/callback"
-			}).then(() => {
+			}).then((tokenResponse) => {
+				handleTokenResponse(tokenResponse as ITokenResponse)
 				navigate("/")
 			}).catch((e) => {
 				console.log("error", e)

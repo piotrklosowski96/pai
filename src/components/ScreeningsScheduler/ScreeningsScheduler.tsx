@@ -73,7 +73,6 @@ export function ScreeningsScheduler({localizer}: IScreeningsSchedulerProps) {
 	const [scheduledScreenings, setScheduledScreenings] = useState<IScreening[]>(schedulerData.screenings);
 	const [screens, setScreens] = useState(schedulerData.screens);
 	const [movies, setMovies] = useState<IMovie[]>(schedulerData.movies);
-	const [draggedScreening, setDraggedScreening] = useState<IScreening>();
 	const [draggedMovie, setDraggedMovie] = useState<IMovie>();
 
 	useEffect(() => {
