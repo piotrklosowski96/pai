@@ -1,16 +1,12 @@
 import { useLoaderData, useNavigate } from "react-router-dom";
 import { useCallback, useState } from "react";
-import {
-	addMovie,
-	getMovie,
-	updateMovie
-} from "../../client";
+import { addMovie, getMovie, updateMovie } from "../../client";
 import { IMovie } from "../../models/IMovie.ts";
 import { MovieStatus } from "../../models/moveStatus.ts";
 
-export const editMovieLoader = async ({params} : {params: { movieId: string }}) => {
+export const editMovieLoader = async ({params}: { params: { movieId: string } }) => {
 	return getMovie({movieId: params.movieId});
-}
+};
 
 export const createMovieLoader = async () => {
 	return {
@@ -26,44 +22,46 @@ export const createMovieLoader = async () => {
 		movieId: "",
 		type: "D2",
 		status: MovieStatus.NIE_GRANY,
-		averageRating: 0.0
-	} as IMovie
-}
+		averageRating: 0.0,
+	} as IMovie;
+};
 
 const genres = [
 	{
-		name: "Akcja"
+		name: "Akcja",
 	},
 	{
-		name: "Horror"
+		name: "Horror",
 	},
 	{
-		name: "Komedia"
+		name: "Komedia",
 	},
 	{
-		name: "Thriller"
+		name: "Thriller",
 	},
 	{
-		name: "Romans"
+		name: "Romans",
 	},
 	{
-		name: "Sensacja"
+		name: "Sensacja",
 	},
 	{
-		name: "Sci-Fi"
+		name: "Sci-Fi",
 	},
-]
+];
 
 export function EditMovie() {
-	const editedMovie = useLoaderData() as IMovie
+	const editedMovie = useLoaderData() as IMovie;
 	const navigate = useNavigate();
 
 	const [movieId] = useState(editedMovie.id);
-	const [title, setTitle] = useState(editedMovie.title)
-	const [genre, setGenre] = useState(editedMovie.genre)
-	const [ageRestriction, setAgeRestriction] = useState(editedMovie.ageRestriction)
-	const [movieDuration, setMovieDuration] = useState(editedMovie.movieDuration)
-	const [description, setDescription] = useState(editedMovie.description)
+	const [title, setTitle] = useState(editedMovie.title);
+	const [genre, setGenre] = useState(editedMovie.genre);
+	const [ageRestriction, setAgeRestriction] = useState(
+		editedMovie.ageRestriction
+	);
+	const [movieDuration, setMovieDuration] = useState(editedMovie.movieDuration);
+	const [description, setDescription] = useState(editedMovie.description);
 	const [posterImage, setPosterImage] = useState(editedMovie.posterImageURL);
 	const [carouselImage, setCarouselImage] = useState(editedMovie.mainPageImageURL);
 
@@ -75,7 +73,7 @@ export function EditMovie() {
 			});
 			reader.readAsDataURL(e.target.files[0]);
 		}
-	}, [])
+	}, []);
 	const onMovieSave = useCallback(() => {
 		if (movieId) {
 			updateMovie({
@@ -89,8 +87,8 @@ export function EditMovie() {
 					status: status,
 					posterImageURL: posterImage,
 					mainPageImageURL: carouselImage,
-				}
-			})
+				},
+			});
 		} else {
 			addMovie({
 				body: {
@@ -101,8 +99,8 @@ export function EditMovie() {
 					movieDuration: movieDuration,
 					posterSource: posterImage,
 					bigImageSource: carouselImage,
-				}
-			})
+				},
+			});
 		}
 	}, [
 		movieId,
@@ -114,7 +112,7 @@ export function EditMovie() {
 		movieDuration,
 		posterImage,
 		carouselImage,
-	])
+	]);
 
 	return (
 		<>
@@ -122,12 +120,24 @@ export function EditMovie() {
 				<div className={"flex w-6/12 p-4"}>
 					{/*Obrazek plakatu*/}
 					<div className={"w-1/2 pr-2"}>
-						<h1 className="font-semibold">
-							Obrazek plakatu:
-						</h1>
-						<div className={"flex justify-center items-center rounded border-2 w-full min-h-40"}>
-							<label className={"flex justify-center items-center relative"} htmlFor={"poster-input"}>
-								<svg className={"absolute"} width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<h1 className="font-semibold">Obrazek plakatu:</h1>
+						<div
+							className={
+								"flex justify-center items-center rounded border-2 w-full min-h-40"
+							}
+						>
+							<label
+								className={"flex justify-center items-center relative"}
+								htmlFor={"poster-input"}
+							>
+								<svg
+									className={"absolute"}
+									width="48"
+									height="48"
+									viewBox="0 0 24 24"
+									fill="none"
+									xmlns="http://www.w3.org/2000/svg"
+								>
 									<path
 										fillRule={"evenodd"}
 										clipRule={"evenodd"}
@@ -143,24 +153,32 @@ export function EditMovie() {
 								</svg>
 								<img className={"object-cover"} src={posterImage} alt={""}/>
 							</label>
-							<input id="poster-input" type="file" hidden={true} onChange={(e) => {
-								onChangePicture(e, setPosterImage)
-							}}/>
+							<input
+								data-testid={`administration-add-new-poster-image`}
+								id="poster-input"
+								type="file"
+								hidden={true}
+								onChange={(e) => {onChangePicture(e, setPosterImage);}}
+							/>
 						</div>
 					</div>
 					{/*Obrazek na stronie głównej*/}
 					<div className={"w-1/2 pl-2"}>
-						<h1 className="font-semibold">
-							Obrazek na stronie głównej:
-						</h1>
-						<div className={"flex justify-center items-center rounded border-2 w-full min-h-40"}>
-							<label className={"flex justify-center items-center relative"} htmlFor={"carousel-input"}>
-								<svg className={"absolute"}
-										 width="48"
-										 height="48"
-										 viewBox="0 0 24 24"
-										 fill="none"
-										 xmlns="http://www.w3.org/2000/svg"
+						<h1 className="font-semibold">Obrazek na stronie głównej:</h1>
+						<div
+							className={"flex justify-center items-center rounded border-2 w-full min-h-40"}
+						>
+							<label
+								className={"flex justify-center items-center relative"}
+								htmlFor={"carousel-input"}
+							>
+								<svg
+									className={"absolute"}
+									width="48"
+									height="48"
+									viewBox="0 0 24 24"
+									fill="none"
+									xmlns="http://www.w3.org/2000/svg"
 								>
 									<path
 										fillRule={"evenodd"}
@@ -177,51 +195,54 @@ export function EditMovie() {
 								</svg>
 								<img className={"object-cover"} src={carouselImage} alt={""}/>
 							</label>
-							<input id="carousel-input" type="file" hidden={true} onChange={(e) => {
-								onChangePicture(e, setCarouselImage)
-							}}/>
+							<input
+								data-testid={`administration-add-new-main-page-image`}
+								id="carousel-input"
+								type="file"
+								hidden={true}
+								onChange={(e) => {onChangePicture(e, setCarouselImage);}}
+							/>
 						</div>
 					</div>
 				</div>
 				<div className={"w-6/12 p-4"}>
 					{/*Tytuł*/}
 					<label className={"block pb-2"}>
-						<h1 className={"font-semibold"}>
-							Tytuł:
-						</h1>
-						<input type={"text"} className={"block w-full rounded border-2"} value={title} onChange={(e) => {
-							setTitle(e.target.value)
-						}}/>
+						<h1 className={"font-semibold"}>Tytuł:</h1>
+						<input
+							data-testid={`administration-title-input-element`}
+							type={"text"}
+							className={"block w-full rounded border-2"}
+							value={title}
+							onChange={(e) => {
+								setTitle(e.target.value);
+							}}
+						/>
 					</label>
 					{/*Gatunek*/}
 					<label className={"block pb-2"}>
-						<h1 className={"font-semibold"}>
-							Gatunek:
-						</h1>
+						<h1 className={"font-semibold"}>Gatunek:</h1>
 						<select
+							data-testid={`administration-select-movie-type`}
 							className={"block w-full rounded border-2"}
 							defaultValue={genre}
 							onChange={(e) => setGenre(e.target.value)}
 						>
-							{
-								genres.map((g) => (
-									<option value={g.name}>{g.name}</option>
-								))
-							}
+							{genres.map((g) => (
+								<option value={g.name}>{g.name}</option>
+							))}
 						</select>
 					</label>
 					{/*Kategoria wiekowa*/}
 					<label className={"block pb-2"}>
-						<h1 className={"font-semibold"}>
-							Kategoria wiekowa
-						</h1>
+						<h1 className={"font-semibold"}>Kategoria wiekowa</h1>
 						<label className={"mr-4"}>
 							<input
 								type="radio"
 								name={"ageRestriction"}
 								value={7}
 								onChange={(e) => {
-									setAgeRestriction(Number(e.target.value))
+									setAgeRestriction(Number(e.target.value));
 								}}
 							/>
 							7+
@@ -232,7 +253,7 @@ export function EditMovie() {
 								name={"ageRestriction"}
 								value={13}
 								onChange={(e) => {
-									setAgeRestriction(Number(e.target.value))
+									setAgeRestriction(Number(e.target.value));
 								}}
 							/>
 							13+
@@ -243,18 +264,19 @@ export function EditMovie() {
 								name={"ageRestriction"}
 								value={16}
 								onChange={(e) => {
-									setAgeRestriction(Number(e.target.value))
+									setAgeRestriction(Number(e.target.value));
 								}}
 							/>
 							16+
 						</label>
 						<label className={"mr-4"}>
 							<input
+								data-testid={`administration-age-category-18-input-element`}
 								type="radio"
 								name={"ageRestriction"}
 								value={18}
 								onChange={(e) => {
-									setAgeRestriction(Number(e.target.value))
+									setAgeRestriction(Number(e.target.value));
 								}}
 							/>
 							18+
@@ -283,11 +305,10 @@ export function EditMovie() {
 					</label>*/}
 					{/*Czas trwania filmu*/}
 					<label className={"block pb-2"}>
-						<h1 className={"flex-none font-semibold"}>
-							Czas trwania filmu:
-						</h1>
+						<h1 className={"flex-none font-semibold"}>Czas trwania filmu:</h1>
 						<div className={"flex"}>
 							<input
+								data-testid={`administration-movie-duration-input-element`}
 								className={"grow rounded border-2"}
 								type="number"
 								min={0}
@@ -297,9 +318,7 @@ export function EditMovie() {
 									setMovieDuration(e.target.valueAsNumber);
 								}}
 							/>
-							<h1 className={"flex-none pl-2 inline"}>
-								min.
-							</h1>
+							<h1 className={"flex-none pl-2 inline"}>min.</h1>
 						</div>
 					</label>
 					{/*Czas sprzątania po seansie*/}
@@ -325,10 +344,9 @@ export function EditMovie() {
 					</label>*/}
 					{/*Opis*/}
 					<label className={"block pb-2"}>
-						<h1 className={"font-semibold"}>
-							Opis:
-						</h1>
+						<h1 className={"font-semibold"}>Opis:</h1>
 						<textarea
+							data-testid={`administration-movie-description-input-element`}
 							className={"block w-full rounded border-2"}
 							rows={8}
 							cols={80}
@@ -339,18 +357,17 @@ export function EditMovie() {
 						/>
 					</label>
 					<button
+						data-testid={`administration-save-movie-button`}
 						type="submit"
 						onClick={() => {
 							onMovieSave();
 							navigate(-1);
 						}}
 					>
-						<div className={"pl-8 pr-8 pt-1 pb-1 rounded border-2"}>
-							Zapisz
-						</div>
+						<div className={"pl-8 pr-8 pt-1 pb-1 rounded border-2"}>Zapisz</div>
 					</button>
 				</div>
 			</div>
 		</>
-	)
+	);
 }
